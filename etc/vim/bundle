@@ -1,0 +1,79 @@
+" vim:se ft=vim:
+
+" Note: Skip initialization for vim-tiny or vim-small.
+if !1 | finish | endif
+
+if has('vim_starting')
+    set nocompatible  " Be iMproved
+
+    " Required:
+    set runtimepath+=~/.vim/bundle/neobundle.vim/
+endif
+
+" Required:
+call neobundle#begin(expand('~/.vim/bundle/'))
+
+" Let NeoBundle manage NeoBundle
+" Required:
+NeoBundleFetch 'Shougo/neobundle.vim'
+
+" Let NeoBundle manage NeoBundle
+NeoBundle 'Shougo/vimproc.vim', {
+\ 'build' : {
+\     'windows' : 'tools\\update-dll-mingw',
+\     'cygwin' : 'make -f make_cygwin.mak',
+\     'mac' : 'make -f make_mac.mak',
+\     'linux' : 'make',
+\     'unix' : 'gmake',
+\    },
+\ }
+
+" NERD tree
+NeoBundle 'scrooloose/nerdtree'
+NeoBundle 'scrooloose/nerdcommenter'
+
+" indent
+NeoBundle 'nathanaelkane/vim-indent-guides'
+
+" completion
+NeoBundle 'Shougo/neocomplete.vim'
+NeoBundle 'haya14busa/vim-migemo'
+
+" reStructuredText
+"NeoBundleLazy 'Rykka/riv.vim', {'autoload': {'filetypes': ['rst']}}
+
+" Python
+NeoBundleLazy 'nvie/vim-flake8', {'autoload': {'filetypes': ['python']}}
+NeoBundleLazy 'keitheis/vim-plim', {'autoload': {'filetypes': ['plim']}}
+
+" JavaScript
+NeoBundleLazy 'jelera/vim-javascript-syntax', {'autoload': {'filetypes': ['javascript']}}
+NeoBundleLazy 'jason0x43/vim-js-indent', {'autoload': {'filetypes': ['javascript', 'typescript']}}
+
+" Jinja2
+NeoBundleLazy 'Glench/Vim-Jinja2-Syntax', {'autoload': {'filetypes': ['jinja']}}
+
+
+" TypeScript
+NeoBundleLazy 'leafgarland/typescript-vim', {'autoload': {'filetypes': ['typescript']}}
+
+" CoffeeScript
+NeoBundleLazy 'kchmck/vim-coffee-script', {'autoload': {'filetypes': ['coffee']}}
+
+" Erlang
+NeoBundleLazy 'oscarh/vimerl', {'autoload': {'filetypes': ['erlang']}}
+
+" ps1 / PowerShell
+NeoBundleLazy 'PProvost/vim-ps1', {'autoload': {'filetypes': ['ps1']}}
+
+" Golang
+NeoBundleLazy 'fatih/vim-go', {'autoload': {'filetypes': ['go']}}
+
+" Required:
+call neobundle#end()
+filetype plugin indent on
+syntax enable
+
+" If there are uninstalled bundles found on startup,
+" this will conveniently prompt you to install them.
+NeoBundleCheck

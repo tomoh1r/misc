@@ -1,0 +1,27 @@
+---
+- name: cmmi python2
+  tags:
+    - python2
+  include: vars.yml
+  vars:
+    python_ver: "{{python2_ver}}"
+    python_bin_ver: "{{python2_bin_ver}}"
+    python_src_hash: "{{python2_src_hash}}"
+    python_configure: >-
+      ./configure
+      --prefix="/opt/python/{{python2_ver}}"
+      --enable-unicode=ucs4
+
+- name: cmmi python3
+  tags:
+    - python3
+  include: vars.yml
+  vars:
+    python_ver: "{{python3_ver}}"
+    python_bin_ver: "{{python3_bin_ver}}"
+    python_src_hash: "{{python3_src_hash}}"
+    python_configure: >-
+      ./configure
+      --prefix="/opt/python/{{python3_ver}}"
+
+# vim:st=2 sts=2 sw=2:

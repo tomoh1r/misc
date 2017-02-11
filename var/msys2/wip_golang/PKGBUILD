@@ -1,0 +1,66 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+# vim:ts=2 sw=2 sts=2:
+
+# main settings
+pkgname=golang
+_repourl='git://github.com/golang/go.git'
+pkgver=1.4.2
+_latest="go${pkgver}"
+pkgrel=1
+arch='x86_64'
+license=('golang')
+url='http://github.com/golang/go/'
+makedepends=('git')
+
+prepare() {
+  # bak
+  _workdir="${srcdir}/${pkgname}-${pkgver}"
+  if [ -d ${_workdir} -a ${_workdir} != / ] ; then
+    mv ${_workdir} ${_workdir}_`date +%Y`_`date +%m%d`_`date +%H%M`_`date +%S`
+  fi
+  _bootdir="${srcdir}/${pkgname}-${pkgver}-boot"
+  if [ -d ${_bootdir} -a ${_bootdir} != / ] ; then
+    mv ${_bootdir} ${_bootdir}_`date +%Y`_`date +%m%d`_`date +%H%M`_`date +%S`
+  fi
+
+  # build go1.4
+  git clone -q --depth 1 -b release-branch.go1.4 ${_repourl} ${_bootdir}
+  pushd "${_bootdir}/src"
+    ./make.bash
+  popd
+
+  # git clone
+  git clone -q --depth 1 ${_repourl} ${pkgname}-${pkgver}
+
+  # prepare
+  if [ -d ${_workdir}/.git ] ; then
+    rm -fr ${_workdir}/.git
+  fi
+  if [ -f ${pkgname}-${pkgver}/.gitignore ] ; then
+    rm ${pkgname}-${pkgver}/.gitignore
+  fi
+  if [ -f ${pkgname}-${pkgver}/.gitattributes ] ; then
+    rm ${pkgname}-${pkgver}/.gitattributes
+  fi
+}
+
+build() {
+  _workdir="${srcdir}/${pkgname}-${pkgver}"
+  cd "${_workdir}/src"
+
+  _bootdir="${srcdir}/${pkgname}-${pkgver}-boot"
+  GOROOT_BOOTSTRAP="${_bootdir}" ./all.bash
+}
+
+check() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+}
+
+package() {
+  # cp to fakeroot
+  cp -r "${srcdir}/${pkgname}-${pkgver}/*" "${pkgdir}"
+
+  # license
+  install -Dm644 "${srcdir}/${pkgname}-${pkgver}/LICENSE" \
+    "${pkgdir}"/usr/share/licenses/${pkgname}/license.txt
+}

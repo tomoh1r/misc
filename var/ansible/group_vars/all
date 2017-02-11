@@ -1,0 +1,24 @@
+---
+hostname: "fedora"
+email: "quickness.net@gmail.com"
+work_dir: "/opt/work"
+
+# vim
+vim:
+  name: "vim"
+  ver: "v7.4.970"
+vim_build_dir: "{{ work_dir }}/{{vim.name}}"
+vim_prefix: "/opt/{{vim.name}}/{{vim.ver}}"
+
+# python2
+python2_ver: "2.7.11"
+python2_bin_ver: "2.7"
+
+# python3
+python3_ver: "3.5.1"
+python3_bin_ver: "3.5"
+
+# ocaml
+ocaml_ver: "4.02.3"
+
+# vim:ft=yaml st=2 sts=2 sw=2:

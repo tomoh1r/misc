@@ -1,0 +1,113 @@
+---
+- name: set hostname
+  tags:
+    - setup
+  sudo: yes
+  command: hostnamectl set-hostname {{hostname}} --static
+
+- name: upgrade all packages
+  tags:
+    - setup
+    - vim
+    - ocaml
+  sudo: yes
+  dnf: name=* state=latest
+
+- name: get tz
+  tags:
+    - setup
+  shell: timedatectl | grep 'Time zone'
+  register: tz
+
+- name: change tz to JST
+  tags:
+    - setup
+  sudo: yes
+  command: timedatectl set-timezone Asia/Tokyo
+  when: tz.stdout.find('Asia/Tokyo') == -1
+
+- name: install the 'Development tools' package group
+  tags:
+    - setup
+  sudo: yes
+  dnf: name="@Development tools" state=present
+
+- name: install tmux
+  tags:
+    - setup
+  sudo: yes
+  dnf: name=tmux state=latest
+
+- name: install msmtp
+  tags:
+    - setup
+  sudo: yes
+  dnf: name=msmtp state=latest
+
+- name: create work dir
+  tags:
+    - setup
+  sudo: yes
+  file: path="{{work_dir}}" state=directory
+
+- name: create misc dir
+  tags:
+    - setup
+  file: path="~/misc" state=directory
+
+- name: create .ssh dir
+  tags:
+    - setup
+  file: >-
+    path="~/.ssh"
+    state=directory
+
+- stat: path="~/.ssh/id_rsa"
+  register: stat_ssh_id_rsa
+  tags:
+    - setup
+
+- name: create .ssh/id_rsa
+  tags:
+    - setup
+  command: >-
+    ssh-keygen -t rsa -b 4096 -P "" -C "{{hostname}} {{email}}" -f ~/.ssh/id_rsa
+    chdir="~/.ssh"
+  when: not stat_ssh_id_rsa.stat.exists
+
+- stat: path="~/misc/dotfiles"
+  register: stat_dotfiles
+  tags:
+    - setup
+
+- name: clone dotfiles
+  tags:
+    - setup
+  git: repo=https://github.com/jptomo/dotfiles.git dest="~/misc/dotfiles"
+  when: not stat_dotfiles.stat.exists
+
+- name: remove origin
+  tags:
+    - setup
+  command: git remote rm origin
+  args:
+    chdir: "~/misc/dotfiles"
+  when: not stat_dotfiles.stat.exists
+
+- name: add origin
+  tags:
+    - setup
+  command: git remote add origin git@github.com:jptomo/dotfiles.git
+  args:
+    chdir: "~/misc/dotfiles"
+  when: not stat_dotfiles.stat.exists
+
+- name: init rcs
+  tags:
+    - setup
+  command: sh setup.sh
+  args:
+    chdir: "~/misc/dotfiles"
+  when: not stat_dotfiles.stat.exists
+
+# vim:st=2 sts=2 sw=2:

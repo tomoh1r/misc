@@ -1,0 +1,55 @@
+" vim:se ft=vim:
+
+" some filetype configuration functions
+" 各種関数はファイルを開く際毎度呼ばれる見たいなので setl で設定する
+function SettingForPython()
+  setl smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
+  autocmd BufWritePre * :%s/\s\+$//ge
+endfunction
+function SettingForRuby()
+  setl tabstop=2 shiftwidth=2 softtabstop=2
+  autocmd BufWritePre * :%s/\s\+$//ge
+endfunction
+function SettingForHTML()
+  setl tabstop=2 shiftwidth=2 softtabstop=2
+endfunction
+function SettingForRST()
+  setl tabstop=3 expandtab shiftwidth=3 softtabstop=3
+endfunction
+function SettingForPLIM()
+  setl tabstop=2 expandtab shiftwidth=2 softtabstop=2
+endfunction
+
+" register filetype
+au BufRead,BufNewFile *.coffee se filetype=coffee
+au BufRead,BufNewFile *.jinja2 se filetype=jinja
+au BufRead,BufNewFile *.plm se filetype=plim
+
+" some filetype settings
+au QuickfixCmdPost make copen
+
+" force use htmldjango in smarty tpl file
+au FileType smarty se ft=htmldjango
+
+au FileType python call SettingForPython()
+au FileType plim call SettingForPLIM()
+au FileType php call SettingForPython()
+au FileType twig call SettingForPython()
+au FileType ruby call SettingForRuby()
+au FileType sh call SettingForPython()
+au FileType ini call SettingForPython()
+au FileType jinja setlocal ts=2 sts=2 sw=2 tw=0
+au FileType cfg call SettingForPython()
+au FileType html call SettingForHTML()
+au FileType htmldjango call SettingForHTML()
+au FileType xml call SettingForHTML()
+au FileType xspf call SettingForHTML()
+au FileType javascript call SettingForHTML()
+au FileType javascript :compiler gjslint
+au FileType css call SettingForHTML()
+au FileType rst call SettingForRST()
+au FileType coffee call SettingForHTML()
+au FileType go compiler go
+au FileType yaml setlocal ts=2 sts=2 sw=2 tw=0
+
+au FileType * se formatoptions-=ro

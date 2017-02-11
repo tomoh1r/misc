@@ -1,0 +1,11 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  roles:
+    - setup
+    - vim
+    - ocaml
+    - python
+
+# vim:st=2 sts=2 sw=2:

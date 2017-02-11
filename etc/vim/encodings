@@ -1,0 +1,115 @@
+" vim:se ft=vim:
+if &encoding !=# 'utf-8'
+  se encoding=japan
+  se fileencoding=japan
+endif
+if has('iconv')
+  let s:enc_euc = 'euc-jp'
+  let s:enc_jis = 'iso-2022-jp'
+  " iconvがeucJP-msに対応しているかをチェック
+  if iconv("\x87\x64\x87\x6a", 'cp932', 'eucjp-ms') ==# "\xad\xc5\xad\xcb"
+    let s:enc_euc = 'eucjp-ms'
+    let s:enc_jis = 'iso-2022-jp-3'
+  " iconvがJISX0213に対応しているかをチェック
+  elseif iconv("\x87\x64\x87\x6a", 'cp932', 'euc-jisx0213') ==# "\xad\xc5\xad\xcb"
+    let s:enc_euc = 'euc-jisx0213'
+    let s:enc_jis = 'iso-2022-jp-3'
+  endif
+  " fileencodingsを構築
+  if &encoding ==# 'utf-8'
+    let s:fileencodings_default = &fileencodings
+    let &fileencodings = s:enc_jis .','. s:enc_euc .',cp932'
+    let &fileencodings = &fileencodings .','. s:fileencodings_default
+    unlet s:fileencodings_default
+  else
+    let &fileencodings = &fileencodings .','. s:enc_jis
+    se fileencodings+=utf-8,ucs-2le,ucs-2
+    if &encoding =~# '^\(euc-jp\|euc-jisx0213\|eucjp-ms\)$'
+      se fileencodings+=cp932
+      se fileencodings-=euc-jp
+      se fileencodings-=euc-jisx0213
+      se fileencodings-=eucjp-ms
+      let &encoding = s:enc_euc
+      let &fileencoding = s:enc_euc
+    else
+      let &fileencodings = &fileencodings .','. s:enc_euc
+    endif
+  endif
+  let &fileencodings = 'utf-8,' . &fileencodings
+  " 定数を処分
+  unlet s:enc_euc
+  unlet s:enc_jis
+endif
+" 日本語を含まない場合は fileencoding に encoding を使うようにする
+if has('autocmd')
+  function! AU_ReCheck_FENC()
+    if &fileencoding =~# 'iso-2022-jp' && search("[^\x01-\x7e]", 'n') == 0
+      let &fileencoding=&encoding
+    endif
+  endfunction
+  autocmd BufReadPost * call AU_ReCheck_FENC()
+endif
+" 改行コードの自動認識
+se fileformats=unix,dos,mac
+" □とか○の文字があってもカーソル位置がずれないようにする
+if exists('&ambiwidth')
+  se ambiwidth=double
+endif
+
+" バイナリ編集(xxd)モード（vim -b での起動、もしくは *.bin ファイルを開くと発動します）
+augroup BinaryXXD
+  autocmd!
+  autocmd BufReadPre  *.bin let &binary =1
+  autocmd BufReadPost * if &binary | silent %!xxd -g 1
+  autocmd BufReadPost * se ft=xxd | endif
+  autocmd BufWritePre * if &binary | %!xxd -r | endif
+  autocmd BufWritePost * if &binary | silent %!xxd -g 1
+  autocmd BufWritePost * se nomod | endif
+augroup END
+
+"カーソル下の文字コード
+"http://vimwiki.net/?tips%2F98
+function! Getb()
+  let c = matchstr(getline('.'), '.', col('.') - 1)
+  let c = iconv(c, &enc, &fenc)
+  return String2Dec(c)
+endfunction
+function! GetB()
+  let c = matchstr(getline('.'), '.', col('.') - 1)
+  let c = iconv(c, &enc, &fenc)
+  return String2Hex(c)
+endfunction
+" :help eval-examples
+" The function Nr2Hex() returns the Hex string of a number.
+func! Nr2Hex(nr)
+  let n = a:nr
+  let r = ""
+  while n
+    let r = '0123456789ABCDEF'[n % 16] . r
+    let n = n / 16
+  endwhile
+  return r
+endfunc
+" The function String2Hex() converts each character in a string to a two
+" character Hex string.
+func! String2Hex(str)
+  let out = ''
+  let ix = 0
+  while ix < strlen(a:str)
+    let out = out . Nr2Hex(char2nr(a:str[ix]))
+    let ix = ix + 1
+  endwhile
+  return out
+endfunc
+func! String2Dec(str)
+  let out = ''
+  let ix = 0
+  while ix < strlen(a:str)
+    if ix == 1
+      let out = out . ','
+    endif
+    let out = out . printf('%3d', char2nr(a:str[ix]))
+    let ix = ix + 1
+  endwhile
+  return out
+endfunc

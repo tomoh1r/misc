@@ -1,0 +1,11 @@
+syntax: glob
+*.pyc
+*.pyo
+*.o
+.hgignore
+.git
+.svn
+.DS_Store
+
+syntax: regexp
+^local/

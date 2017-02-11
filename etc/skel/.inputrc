@@ -1,0 +1,20 @@
+Control-l: clear-screen
+
+# チルダをタブにより展開しない
+set expand-tilde off
+
+# 日本語関係
+set input-meta on
+set convert-meta off
+set meta-flag on
+set output-meta on
+
+# タブ補完時、大文字小文字無視
+set completion-ignore-case on
+
+# コンソールの横幅をあふれたとき自動スクロール
+set horizontal-scroll-mode on
+
+# ヒストリー補完機能を Ctrl+N, Ctrl+P に割り当てる
+Control-p: history-search-backward
+Control-n: history-search-forward

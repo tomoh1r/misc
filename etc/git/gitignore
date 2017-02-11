@@ -1,0 +1,4 @@
+*.pyc
+.hg
+.svn
+venv/

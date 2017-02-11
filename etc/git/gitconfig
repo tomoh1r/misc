@@ -1,0 +1,48 @@
+# vim:ft=gitconfig noet:
+
+[core]
+	symlinks = false
+	autocrlf = false
+	pager =
+	abbrev = 12
+
+[color]
+	ui = true
+
+[status]
+	short = true
+	branch = true
+
+[pack]
+	packSizeLimit = 2g
+
+[help]
+	format = man
+
+[blame]
+	date = short
+
+[log]
+	date = iso
+
+[format]
+	pretty = format:%C(yellow)%h %C(green)%cd %C(blue)%an%C(red)%d %C(reset)%s%n
+
+[http]
+	sslVerify = true
+
+[tig "bind"]
+	generic = g move-first-line
+	generic = G move-last-line
+	generic = ^F move-page-down
+	generic = ^B move-page-up
+
+[alias]
+	co = checkout
+	ci = commit
+	st = status
+	id = log -1 HEAD^ --pretty=format:"%H%n"
+	di = diff --color-words
+	diffw = !git diff --color-words | iconv -f UTF-8 -t $MY_GIT_DIFF_ENC
+	gl = log --graph --all
+	gll = log --graph

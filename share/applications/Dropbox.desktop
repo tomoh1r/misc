@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Dropbox Daemon
+Name[ja]=Dropboxのデーモン
+Exec=/home/blah/.dropbox-dist/dropboxd &
+Terminal=false
+StartupNotify=true

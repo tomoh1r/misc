@@ -1,0 +1,21 @@
+--- Python-2.7.10.orig/Lib/distutils/spawn.py   2015-05-24 01:09:02.000000000 +0900
++++ Python-2.7.10/Lib/distutils/spawn.py        2015-07-11 01:19:36.988354000 +0900
+@@ -118,6 +118,9 @@
+     if dry_run:
+         return
+     executable = cmd[0]
++    if search_path:
++        # either we find one or it stays the same
++        executable = find_executable(executable) or executable
+     exec_fn = search_path and os.execvp or os.execv
+     env = None
+     if sys.platform == 'darwin':
+@@ -212,7 +215,7 @@
+     paths = path.split(os.pathsep)
+     base, ext = os.path.splitext(executable)
+
+-    if (sys.platform == 'win32' or os.name == 'os2') and (ext != '.exe'):
++    if (sys.platform == 'win32' or os.name == 'os2' or sys.platform == 'msys') and (ext != '.exe'):
+         executable = executable + '.exe'
+
+     if not os.path.isfile(executable):

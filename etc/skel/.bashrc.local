@@ -1,0 +1,56 @@
+# vim:ft=sh noet:
+
+if [ "$_USER_INITED" -ne 1 ]; then
+	export EDITOR=vim
+	export PAGER=less
+	export PROMPT_COMMAND='echo -ne "\033]0;${HOSTNAME%%.*}:${PWD/$HOME/~}\007"'
+	export MY_GIT_DIFF_ENC=UTF-8
+	export HGENCODING=utf-8
+	export SYSTEMD_PAGER=
+	export PATH=~/misc/bin:~/.local/bin:~/.local/sbin:/usr/local/sbin:/sbin:$PATH
+	export _USER_INITED=1
+fi
+
+### 作業ブランチの表示
+#PS1="\$(git_branch)\$(hg_branch)[@\h \W]\$ "
+
+### vim
+unset VIM
+unset VIMRUNTIME
+#mkdir -p ~/.vim/bundle
+#git clone git://github.com/Shougo/neobundle.vim.git ~/.vim/bundle/neobundle.vim
+#_vim="/opt/vim/v7-4-692"
+#export VIM="$_vim/bin"
+#export VIMRUNTIME="$_vim/share/vim/vim74/"
+#export PATH="$VIM:$PATH"
+#unset _vim
+
+### python
+#export PATH="/opt/Python/2.7.8/bin:$PATH"
+#eval "`pip completion --bash`"
+
+### ruby
+#export PATH="$HOME/.rbenv/bin:${PATH}"
+#eval "$(rbenv init -)"
+#export PATH=$HOME/local/lib/gems/1.8/bin:${PATH}
+#export RUBYOPT='-Ke -rkconv'
+#export RUBYLIB=$HOME/local/lib:/usr/lib/ruby/1.8
+#export GEM_HOME=$HOME/local/lib/gems/1.8
+
+### Java
+#export JAVA_TOOL_OPTIONS="-Dfile.encoding=UTF-8"
+
+### for jenkins
+#export JENKINS_HOME=$HOME/jenkins
+
+### node.js
+#source "$HOME/.nvm/nvm.sh"
+#source "$HOME/.nvm/bash_completion"
+
+### Ocaml
+#eval `opam config env`
+
+# Linux IM
+#export GTK_IM_MODULE=ibus
+#export XMODIFIERS=@im=ibus
+#export QT_IM_MODULE=ibus

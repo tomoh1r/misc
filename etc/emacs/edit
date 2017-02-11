@@ -1,0 +1,5 @@
+#!/bin/bash
+_cmd="emacsclient"
+_opt="-a='' -nw -q -s /tmp/emacs1000/server"
+
+exec $_cmd $_opt -c "$@"

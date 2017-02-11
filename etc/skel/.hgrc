@@ -1,0 +1,19 @@
+%include ~/Documents/misc/dotfiles/misc/mercurial/hgrc
+
+[ui]
+username = Tomohiro NAKAMURA <quickness.net@gmail.com>
+cacerts = ~/Documents/misc/dotfiles/misc/mercurial/hgignore
+
+[web]
+; windows: /ssl/certs/ca-bundle.crt
+; linux: /etc/ssl/certs/ca-bundle.crt
+cacerts = /ssl/certs/ca-bundle.crt
+
+;[hostfingerprints]
+;example.com = 01:23:45:67:89:ab:cd:ef:gh:ij:kl:mn:op:qr:st:uv:wx:yz:01:23
+
+;[auth]
+;site.prefix = example.com
+;site.username = sample_account
+;site.password = sample_passwd
+;site.schemes = https

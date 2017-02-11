@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=mlterm
+Comment=Multi Lingual TERMinal emulator on X
+Exec=/opt/mlterm/3.6.0/bin/mlclient
+Icon=utilities-terminal
+Terminal=false
+Type=Application
+Categories=System;TerminalEmulator
+GenericName=Terminal

@@ -1,0 +1,49 @@
+; vim:ft=cfg:
+
+[ui]
+style = default
+ssh = ssh -C
+
+[merge-tools]
+diff3.args = -m $local $base $other > $output
+
+[extensions]
+color =
+;pip install diff-highlight
+diff_highlight =
+eol =
+mq =
+progress =
+rebase =
+record =
+transplant =
+histedit =
+
+[color]
+mode = auto
+
+[extdiff]
+cmd.cdiff = git_diff_wrapper
+
+[eol]
+native = LF
+
+[mq]
+secret = True
+
+[phases]
+publish = False
+new-commit = secret
+
+[extensions]
+hgext.extdiff =
+
+[extdiff]
+cmd.vimdiff =
+
+[alias]
+qser = qser -s
+gl = log -G
+
+[hooks]
+update = find . -name "*.pyc" -delete

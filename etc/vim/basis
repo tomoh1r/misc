@@ -1,0 +1,118 @@
+" vim:se ft=vim:
+" 文字色／背景色
+colo slate
+
+" ウィンドウ表示関係
+se number       " 行番号表示
+se title        " ウィンドウのタイトルを書き換える
+se cursorline   " カーソル行を強調表示
+
+" タブ関連
+" Anywhere SID.
+function! s:SID_PREFIX()
+  return matchstr(expand('<sfile>'), '<SNR>\d\+_\zeSID_PREFIX$')
+endfunction
+
+" Set tabline.
+function! s:my_tabline()  "{{{
+  let s = ''
+  for i in range(1, tabpagenr('$'))
+    let bufnrs = tabpagebuflist(i)
+    let bufnr = bufnrs[tabpagewinnr(i) - 1]  " first window, first appears
+    let no = i  " display 0-origin tabpagenr.
+    let mod = getbufvar(bufnr, '&modified') ? '!' : ' '
+    let title = fnamemodify(bufname(bufnr), ':t')
+    let title = '[' . title . ']'
+    let s .= '%'.i.'T'
+    let s .= '%#' . (i == tabpagenr() ? 'TabLineSel' : 'TabLine') . '#'
+    let s .= no . ':' . title
+    let s .= mod
+    let s .= '%#TabLineFill# '
+  endfor
+  let s .= '%#TabLineFill#%T%=%#TabLine#'
+  return s
+endfunction "}}}
+let &tabline = '%!'. s:SID_PREFIX() . 'my_tabline()'
+set showtabline=2 " 常にタブラインを表示
+
+" The prefix key.
+nn [Tag] <Nop>
+nm t [Tag]
+" Tab jump
+" t1 で1番左のタブ、t2 で1番左から2番目のタブにジャンプ
+for n in range(1, 9)
+  execute 'nnoremap <silent> [Tag]'.n  ':<C-u>tabnext'.n.'<CR>'
+endfor
+
+" tc 新しいタブを一番右に作る
+map <silent> [Tag]c :tablast <bar> tabnew<CR>
+" tx タブを閉じる
+map <silent> [Tag]x :tabclose<CR>
+" tn 次のタブ
+nn <C-n>   gt
+" tp 前のタブ
+nn <C-p>   gT
+
+" ステータスライン関係
+se laststatus=2 " ステータスラインを常に表示
+"se statusline=%y=[%{&fileencoding}][\%{&fileformat}]\ %F%m%r%=<%c:%l>
+" ファイルパス [filetype][fenc][ff]    桁(ASCII=10進数,HEX=16進数) 行/全体(位置)[修正フラグ]
+se statusline=%<%F\ %r%h%w%y%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%4v(ASCII=%{Getb()},HEX=%{GetB()})\ %l/%L(%P)%m
+
+" 特殊記号表示
+se list
+se lcs=tab\:>-,extends\:<,trail\:-,eol\:$
+
+" SWP BAK ファイル
+se noswapfile   " SWF ファイルなし
+se nobackup     " BAK ファイルなし
+se undodir=expand("~/.local/var/vim/undo")
+"se backupdir=$VIM\_vim\backups
+"se directory=$VIM\_vim\swaps
+
+" indent
+se tabstop=4 shiftwidth=4 softtabstop=4
+se smarttab
+se expandtab
+se autoindent
+se smartindent
+se cindent
+se formatoptions=q
+se textwidth=80
+
+" Folding
+se foldmethod=indent  " indent でfold
+se foldlevel=99       " hoge
+
+" fold keymappings
+nn <space> za
+vn <space> zf
+
+" 検索関係
+se incsearch    " インクリメンタルサーチ
+se nowrapscan   " ラップしない
+se ignorecase   " 大文字小文字無視
+se smartcase    " 大文字で始めたら大文字小文字を区別する
+se hlsearch     " 検索文字をハイライト表示
+
+" Nerdtree
+nmap <silent> <C-O> :NERDTreeToggle<CR>
+let g:NERDTreeShowHidden = 0
+let g:NERDTreeIgnore=[
+\   '\.svn$',
+\   '\.pyc$',
+\   '\.hg$',
+\   '\.git$',
+\   '__pycache__',
+\   '\.egg-info',
+\   '\.cache',
+\   '\.idea',
+\   '\.ipynb_checkpoints',
+\   '\.tox',
+\   '\.vagrant',
+\]
+let g:NERDTreeDirArrows = 0
+let g:NERDTreeShowHidden=1
+
+" ### flake8 ###
+"let g:flake8_ignore='E501,E241'

@@ -1,0 +1,13 @@
+diff --git a/src/Makefile b/src/Makefile
+index 5a5518d4353b..727f7f4c55fd 100644
+--- a/src/Makefile
++++ b/src/Makefile
+@@ -1731,6 +1731,8 @@ autoconf:
+        -rm -rf autom4te.cache
+        -rm -f auto/config.status auto/config.cache
+
++output_auto_osdef_h: auto/osdef.h
++
+ # Re-execute this Makefile to include the new auto/config.mk produced by
+ # configure Only used when typing "make" with a fresh auto/config.mk.
+ myself:
