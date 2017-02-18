@@ -10,7 +10,7 @@ def springBootVersion = '1.5.1.RELEASE'
 
 group = 'io.github.jptomo'
 version = '0.0.1-SNAPSHOT'
-description = """Spring Boot Batch Sample"""
+description = """Spring Boot Sample"""
 
 def jdkVersion = 1.8
 sourceCompatibility = jdkVersion
