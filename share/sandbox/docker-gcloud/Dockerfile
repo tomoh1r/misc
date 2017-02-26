@@ -2,7 +2,7 @@
 # Build gcloud on Alpine Linux.
 #
 # Usage:
-#   $ docker build -t gcloud -f gcloud-Dockerfile .
+#   $ docker build -t local/gcloud -f Dockerfile .
 #
 
 FROM alpine:3.5
@@ -18,5 +18,3 @@ RUN cd ~ && \
     apk del --purge .builddep && \
     rm -fr /var/cache/apk/* \
            /root/google-cloud-sdk-137.0.1-linux-x86_64.tar.gz
-
-# vim:ft=dockerfile:
