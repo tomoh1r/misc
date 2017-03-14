@@ -12,18 +12,18 @@
 
 # vim ‚ÌÝ’è
 #$ENV:Path = "$HOME\Documents\Application\vim80-kaoriya-win64-8.0.0039-20161016;$Env:Path"
-#Set-Alias -Name vim -Value some
-#Remove-Item Alias:vim
+Remove-Item -ErrorAction SilentlyContinue Alias:vim
 
 Set-Alias -Name grep -Value Select-String
 
 #Import-VisualStudioVars -VisualStudioVersion 2015 -Architecture amd64
 
-Function Global:Prompt {
+[ScriptBlock]$Prompt = {
     $realLASTEXITCODE = $LASTEXITCODE
     $Host.UI.RawUI.ForegroundColor = "White"
-    Write-Host $pwd.ProviderPath -NoNewLine -ForegroundColor Green
+    Write-Host "$(git_branch)$(hg_branch)[$(Get-Date -Format 'yyyy/mm/dd hh:mm:ss')] PS $(_get_pwd)"
     $global:LASTEXITCODE = $realLASTEXITCODE
-    Write-Host "`n" -NoNewLine -ForegroundColor "DarkGray"
-    return "$(git_branch)$(hg_branch)[$(Get-Date -Format 'yyyy/mm/dd hh:mm:ss')] PS $(_get_pwd)`n> "
+    return "> "
 }
+
+Set-Item -Path function:\prompt -Value $Prompt -Options ReadOnly
