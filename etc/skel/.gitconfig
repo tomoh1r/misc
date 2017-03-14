@@ -1,11 +1,11 @@
 # vim:ft=gitconfig noet:
 
 [include]
-	path = ~/Documents/misc/dotfiles/misc/git/gitconfig
+	path = ~/misc/etc/git/gitconfig
 
 [core]
-	attributesfile = ~/Documents/misc/dotfiles/misc/git/gitattributes
-	excludesfile = ~/Documents/misc/dotfiles/misc/git/gitignore
+	attributesfile = ~/misc/etc/git/gitattributes
+	excludesfile = ~/misc/etc/git/gitignore
 
 [user]
 	name = Tomohiro Nakamura

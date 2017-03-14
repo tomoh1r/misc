@@ -1,8 +1,8 @@
-%include ~/Documents/misc/dotfiles/misc/mercurial/hgrc
+%include ~/misc/etc/mercurial/hgrc
 
 [ui]
 username = Tomohiro NAKAMURA <quickness.net@gmail.com>
-cacerts = ~/Documents/misc/dotfiles/misc/mercurial/hgignore
+ignore = ~/misc/etc/mercurial/hgignore
 
 [web]
 ; windows: /ssl/certs/ca-bundle.crt

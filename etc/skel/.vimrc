@@ -1,6 +1,6 @@
 " vim: ft=vim:
 
-let s:dotmisc = expand('~/Documents/misc/dotfiles/misc/vim/')
+let s:dotmisc = expand('~/misc/etc/vim/')
 
 " 基本的に bash のスクリプトを操作するので
 let g:is_bash = 1
