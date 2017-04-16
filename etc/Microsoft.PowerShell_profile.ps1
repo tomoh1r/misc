@@ -6,9 +6,18 @@
 $OutputEncoding = [Text.Encoding]::Default
 $ENV:LANG = "ja_JP.CP932"
 
+Function Set-Null-Env {
+    Param ( $Name )
+    Process {
+        if ([Environment]::GetEnvironmentVariable($name) -ne $null) {
+            [Environment]::SetEnvironmentVariable($name, $null, "User")
+        }
+    }
+}
+
 # vim
-[Environment]::SetEnvironmentVariable("VIM", $null, "User")
-[Environment]::SetEnvironmentVariable("VIMRUNTIME", $null, "User")
+Set-Null-Env -Name "VIM"
+Set-Null-Env -Name "VIMRUNTIME"
 Set-Alias -name vi -value vim.exe
 
 # git diffw
