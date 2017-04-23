@@ -14,7 +14,7 @@ See [Windows Containers on Windows 10](https://docs.microsoft.com/en-us/virtuali
 ## Download Python 3.6.1.
 
 ```ps1
-> Invoke-WebRequest -Uri https://www.python.org/ftp/python/3.6.1/python-3.6.1.exe -OutFile .\python-3.6.1.exe
+> Invoke-WebRequest -Uri https://www.python.org/ftp/python/3.6.1/python-3.6.1.exe -OutFile .\src\python-3.6.1.exe
 ```
 
 # Build and run.
