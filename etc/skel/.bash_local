@@ -1,6 +1,6 @@
 # vim:ft=sh noet:
 
-if [ "$_USER_INITED" -ne 1 ]; then
+if [ -z "$_USER_INITED" ] ; then
 	export EDITOR=vim
 	export PAGER=less
 	export PROMPT_COMMAND='echo -ne "\033]0;${HOSTNAME%%.*}:${PWD/$HOME/~}\007"'
