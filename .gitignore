@@ -1,5 +1,6 @@
 lib/*
 tmp/*
+var/lib/mysql/*
 var/repo/*
 var/pyvenv/*
 .gradle
