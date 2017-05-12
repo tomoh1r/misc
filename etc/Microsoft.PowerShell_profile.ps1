@@ -43,6 +43,7 @@ if($host.Name -eq 'ConsoleHost')
 {
     Import-Module Pscx
     Import-Module PSReadline
+    Import-Module posh-git
     Set-PSReadlineOption -EditMode Emacs
 
     Function _reverse_check(){
