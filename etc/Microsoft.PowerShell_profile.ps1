@@ -41,9 +41,7 @@ $ENV:PATHEXT = [String]::Join(';', ($ENV:PATHEXT -split ';' | ? {$_ -ne ''} | % 
 # see https://github.com/lzybkr/PSReadLine#installation
 if($host.Name -eq 'ConsoleHost')
 {
-    Import-Module Pscx
-    Import-Module PSReadline
-    Import-Module posh-git
+    Import-Module -Name posh-git
     Set-PSReadlineOption -EditMode Emacs
 
     Function _reverse_check(){
@@ -109,7 +107,7 @@ if($host.Name -eq 'ConsoleHost')
         }
     }
 
-    Remove-Item Alias:cd
+    Remove-Item Alias:cd -ErrorAction SilentlyContinue
     Function cd() {
         Param(
             [Parameter(Mandatory = $false, Position = 0)]
@@ -144,7 +142,7 @@ if($host.Name -eq 'ConsoleHost')
         }
     }
 
-    Remove-Item Alias:touch
+    Remove-Item Alias:touch -ErrorAction SilentlyContinue
     Function touch(){
         Param([string]$filename)
 
