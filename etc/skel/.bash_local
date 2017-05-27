@@ -3,7 +3,6 @@
 if [ -z "$_USER_INITED" ] ; then
 	export EDITOR=vim
 	export PAGER=less
-	export PROMPT_COMMAND='echo -ne "\033]0;${HOSTNAME%%.*}:${PWD/$HOME/~}\007"'
 	export MY_GIT_DIFF_ENC=UTF-8
 	export HGENCODING=utf-8
 	export SYSTEMD_PAGER=
