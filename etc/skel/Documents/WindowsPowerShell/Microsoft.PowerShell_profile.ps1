@@ -21,7 +21,7 @@ Set-Alias -Name grep -Value Select-String
 [ScriptBlock]$Prompt = {
     $realLASTEXITCODE = $LASTEXITCODE
     $Host.UI.RawUI.ForegroundColor = "White"
-    Write-Host "$(git_branch)$(hg_branch)[$(Get-Date -Format 'yyyy/mm/dd hh:mm:ss')] PS $(_get_pwd)"
+    Write-Host "$(home\Get-Git-Branch)$(home\Get-Hg-Branch)[$(Get-Date -Format 'yyyy/mm/dd hh:mm:ss')] PS $(home\Get-Pwd)"
     $global:LASTEXITCODE = $realLASTEXITCODE
     return "> "
 }
