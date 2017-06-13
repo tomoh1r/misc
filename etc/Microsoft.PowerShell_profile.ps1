@@ -50,23 +50,17 @@ $ENV:PATHEXT = [String]::Join(';', ($ENV:PATHEXT -split ';' | ? {$_ -ne ''} | % 
 
 Set-Alias -Name ngen -Value (Join-Path ([System.Runtime.InteropServices.RuntimeEnvironment]::GetRuntimeDirectory()) ngen.exe)
 [AppDomain]::CurrentDomain.GetAssemblies() |
-    where { ( $_.Location ) `
-            -and -not $_.Location.Contains("blahblahblah") `
-            -and -not $_.Location.Contains("PSReadLine.dll") `
+    where { ( $_.Location ) } |
+    where {      -not $_.Location.Contains("PSReadLine.dll") `
             -and -not $_.Location.Contains("Pscx.Core.dll") `
             -and -not $_.Location.Contains("Pscx.dll") `
             -and -not $_.Location.Contains("SevenZipSharp.dll") `
             } |
-    sort {Split-path $_.location -leaf} |
+    sort { Split-path $_.location -leaf } |
     % {
-        $Name = (Split-Path $_.location -leaf)
-        if ([System.Runtime.InteropServices.RuntimeEnvironment]::FromGlobalAccessCache($_))
+        if (-not [System.Runtime.InteropServices.RuntimeEnvironment]::FromGlobalAccessCache($_))
         {
-            #Write-Host "Already GACed: $Name"
-        }
-        else
-        {
-            Write-Host -ForegroundColor Yellow "NGENing      : $Name"
-            ngen $_.location | %{"`t$_"}
+            Write-Host -ForegroundColor Yellow "NGENing : $(Split-Path $_.location -leaf)"
+            ngen install $_.location /silent | %{"`t$_"}
         }
       }
