@@ -1,5 +1,3 @@
-# cp932
-#
 # Install:
 #   Install-Module -Scope CurrentUser -Name Pscx -RequiredVersion 3.2.1.0 -AllowClobber
 #
@@ -9,15 +7,18 @@ $ENV:LANG = "ja_JP.CP932"
 
 # ### Module ###
 
+$Env:PSModulePath = "$Env:UserProfile\misc\lib\WindowsPowerShell\Modules;" + $Env:PSModulePath
+
 # PowerShell ReadLine
 # see https://github.com/lzybkr/PSReadLine#installation
 if($host.Name -eq 'ConsoleHost')
 {
     Import-Module -Name posh-git
+    Import-Module -Name Pscx
+    Import-Module -Name PSWindowsUpdate
+    Set-Alias -Name cd -Value home\Set-LocationExHome -Option AllScope
     Set-PSReadlineOption -EditMode Emacs
 }
-
-$Env:PSModulePath = "$Env:UserProfile\misc\lib\WindowsPowerShell\Modules;" + $Env:PSModulePath
 
 # ### some ###
 

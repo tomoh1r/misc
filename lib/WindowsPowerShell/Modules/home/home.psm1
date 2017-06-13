@@ -70,8 +70,7 @@ Function Get-SortedCommand() {
     }
 }
 
-Remove-Item Alias:cd -ErrorAction SilentlyContinue
-Function cd() {
+Function Set-LocationExHome() {
     Param(
         [Parameter(Mandatory = $false, Position = 0)]
         [string]$Path
