@@ -19,11 +19,9 @@ Set-Alias -Name grep -Value Select-String
 #Import-VisualStudioVars -VisualStudioVersion 2015 -Architecture amd64
 
 [ScriptBlock]$Prompt = {
-    $realLASTEXITCODE = $LASTEXITCODE
-    $Host.UI.RawUI.ForegroundColor = "White"
-    Write-Host "$(home\Get-Git-Branch)$(home\Get-Hg-Branch)[$(Get-Date -Format 'yyyy/mm/dd hh:mm:ss')] PS $(home\Get-Pwd)"
-    $global:LASTEXITCODE = $realLASTEXITCODE
+    $global:LASTEXITCODE = $LASTEXITCODE
+    Write-Host "$(Get-Git-Branch)$(Get-Hg-Branch)[$(Get-Date -Format 'yyyy/mm/dd hh:mm:ss')] PS $(Get-Pwd)"
     return "> "
 }
 
-Set-Item -Path function:\prompt -Value $Prompt -Options ReadOnly
+Set-Item -Path Function:\Prompt -Value $Prompt -Options ReadOnly
