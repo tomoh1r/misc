@@ -33,3 +33,6 @@ hs_err_pid*
 
 # project
 share/sandbox/*/build/
+
+###
+share/sandbox/vagrant-chef/.vagrant
