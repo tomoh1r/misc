@@ -28,17 +28,17 @@ fi
 
 if [ ! -f /root/.provision_install_chef ] ; then
 	sudo -u vagrant scl enable rh-ruby24 'bundler install --gemfile=/vagrant/chef/Gemfile --path=/home/vagrant/.local/var/lib/chef-bundle'
-	sudo -u vagrant cp /vagrant/chef/.bundle/config /home/vagrant/.bundle/config
+
 	[ ! -d /home/vagrant/.local/bin ] && sudo -u vagrant mkdir /home/vagrant/.local/bin
 	sudo -u vagrant tee /home/vagrant/.local/bin/berks << 'EOF' > /dev/null
 #! /bin/sh
-scl enable rh-ruby24 "bundler exec berks $@"
+BUNDLE_PATH=/home/vagrant/.local/var/lib/chef-bundle BUNDLE_GEMFILE=/vagrant/chef/Gemfile BUNDLE_DISABLE_SHARED_GEMS="true" scl enable rh-ruby24 "bundler exec berks $@"
 EOF
 	sudo -u vagrant tee /home/vagrant/.local/bin/chef-solo << 'EOF' > /dev/null
 #! /bin/sh
-scl enable rh-ruby24 "bundler exec chef-solo $@"
+BUNDLE_PATH=/home/vagrant/.local/var/lib/chef-bundle BUNDLE_GEMFILE=/vagrant/chef/Gemfile BUNDLE_DISABLE_SHARED_GEMS="true" scl enable rh-ruby24 "bundler exec chef-solo $@"
 EOF
-	sudo -u vagrant chmod +x /home/vagrant/.local/bin/*
+	chmod +x /home/vagrant/.local/bin/*
 
 	touch /root/.provision_install_chef
 fi
