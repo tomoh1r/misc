@@ -1,22 +1,46 @@
 #! /bin/sh
+# vim:noet:
 #
 # Vagrant provision script
 #
-# ### WIP ###
-#
 
-yum makecache fast
-yum update -y
-yum clean all
+if [ ! -f /root/.provision_updated ] ; then
+	yum clean all
+	yum makecache fast
 
-yum makecache fast
-yum install -y centos-release-scl
-yum clean all
+	yum install -y deltarpm
+	yum update -y
 
-yum makecache fast
-yum group install -y "Development Tools"
-yum install -y rh-ruby24-rubygem-bundler rh-ruby24-ruby-devel
+	touch /root/.provision_updated
+fi
 
-sudo -u vagrant scl enable rh-ruby24 'bundler install --gemfile=/vagrant/chef/Gemfile --path=/home/vagrant/.local/lib/ruby/gems --binstubs=/home/vagrant/.local/bin'
+if [ ! -f /root/.provision_install_deps ] ; then
+	yum clean all
+	yum makecache fast
+
+	yum install -y centos-release-scl
+
+	yum group install -y "Development Tools"
+	yum install -y rh-ruby24-rubygem-bundler rh-ruby24-ruby-devel
+
+	touch /root/.provision_install_deps
+fi
+
+if [ ! -f /root/.provision_install_chef ] ; then
+	sudo -u vagrant scl enable rh-ruby24 'bundler install --gemfile=/vagrant/chef/Gemfile --path=/home/vagrant/.local/var/lib/chef-bundle'
+	sudo -u vagrant cp /vagrant/chef/.bundle/config /home/vagrant/.bundle/config
+	[ ! -d /home/vagrant/.local/bin ] && sudo -u vagrant mkdir /home/vagrant/.local/bin
+	sudo -u vagrant tee /home/vagrant/.local/bin/berks << 'EOF' > /dev/null
+#! /bin/sh
+scl enable rh-ruby24 "bundler exec berks $@"
+EOF
+	sudo -u vagrant tee /home/vagrant/.local/bin/chef-solo << 'EOF' > /dev/null
+#! /bin/sh
+scl enable rh-ruby24 "bundler exec chef-solo $@"
+EOF
+	sudo -u vagrant chmod +x /home/vagrant/.local/bin/*
+
+	touch /root/.provision_install_chef
+fi
 
 yum clean all
