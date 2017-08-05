@@ -1,0 +1,85 @@
+#! /bin/sh
+
+# defs utils
+
+_exec() {
+	_prog=/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe
+	$_prog -NoLogo -NoProfile -Command "$1"
+}
+
+_isEixsts() {
+	_cmd='& { $(Get-VM -Name '$1' -ErrorAction SilentlyContinue).State }'
+	if [ -z "`_exec "$_cmd"`" ] ; then
+		echo "No such vm: $1"
+		exit 1
+	fi
+}
+
+# defs main
+
+_state() {
+	_isEixsts "$1"
+
+	_cmd='& { $(Get-VM -Name '$1').State }'
+	case "`_exec "$_cmd"`" in
+		Running*)
+			echo 'start'
+			;;
+		Off*)
+			echo 'stop'
+			;;
+		*)
+			echo "$_ret"
+			;;
+	esac
+}
+
+_start() {
+	_isEixsts "$1"
+
+	if [ "`_state $1`" != 'start' ] ; then
+		_exec "& {Start-VM -Name $1}"
+	else
+		echo 'Already started.'
+	fi
+}
+
+_stop() {
+	_isEixsts "$1"
+
+	if [ "`_state $1`" != 'stop' ] ; then
+		_exec "& {Stop-VM -Name $1}"
+	else
+		echo 'Already stopped.'
+	fi
+}
+
+_restart() {
+	_isEixsts "$1"
+
+	_stop $1
+	_start $1
+}
+
+# main processure
+
+case "$1" in
+	start)
+		_start "$2"
+		;;
+	stop)
+		_stop "$2"
+		;;
+	restart)
+		_restart "$2"
+		;;
+	status)
+		_state "$2"
+		;;
+	*)
+		echo "Usage: $0 start|stop|restart|status" >&2
+		exit 3
+		;;
+esac
+
+# vim:noet:
