@@ -10,7 +10,7 @@ _exec() {
 _isEixsts() {
 	_cmd='& { $(Get-VM -Name '$1' -ErrorAction SilentlyContinue).State }'
 	if [ -z "`_exec "$_cmd"`" ] ; then
-		echo "No such vm: $1"
+		echo "No such vm: $1" >&2
 		exit 1
 	fi
 }
