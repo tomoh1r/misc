@@ -47,7 +47,10 @@
       var TARGET_SEL = '#md_content',
           UrlParser = class {
             constructor(href) {
-              this.basePathname = '/index.html'
+              this.basePathname = '/index.html';
+              this.updateHref(href);
+            }
+            updateHref(href) {
               this.href = href;
               if (this.isLocalhost) {
                 this.url = null;
@@ -86,8 +89,10 @@
               }
               return fpath;
             }
-            get displayUrl() {
-              return this.basePathname + this.search;
+            get isRoot() {
+              return (this.pathname == '/index.html' ||
+                      this.pathname == '/' ||
+                      this.pathname == '/README.md');
             }
             get isLocalhost() {
               if (! ['//', 'http://', 'https://'].some(
@@ -114,46 +119,79 @@
               return false;
             }
           },
-          updateLink = function(sel) {
-            $(sel).find('a').each(function(idx, elem) {
-              var elem$ = $(elem),
-                  urlParser = new UrlParser(elem$.attr('href'));
-              if (urlParser.isMd) {
-                elem$.on('click', function(e) {
-                  updateContent(urlParser.href);
-                  return false;
-                });
-                elem$.attr('href', 'javascript:void(0)');
-              };
-            });
-          },
-          updateContent = function(href) {
-            var urlParser = new UrlParser(href);
-            if (! urlParser.isMd) {
-              return;
-            }
+          Page = class {
+            constructor() {
+              var old_url = document.URL;
 
-            $.ajax({
-              url: urlParser.fpath,
-              cache: false,
-              success: function(data) {
-                $(TARGET_SEL).html(marked(data));
-                updateLink('#md_content');
-                history.pushState(null, null, urlParser.displayUrl);
-              },
-              error: function(xhr, errorType) {
-                $(TARGET_SEL).append("failed to load.");
+              this.main_title = '';
+
+              this.updateLink('#header');
+              $('form.navbar-form').on('submit', function(e) {
+                this.updateContent($('form.navbar-form input')[0].value);
+                return false;
+              });
+              this.urlParser = new UrlParser(old_url);
+              this.setupTitle();
+              this.updateContent(old_url);
+            }
+            setupTitle() {
+              this.updateContent('/README.md');
+            }
+            updateDisplayUrl() {
+              history.pushState(
+                null,
+                null,
+                this.urlParser.basePathname +
+                this.urlParser.search);
+            }
+            updateTitle(title) {
+              if (this.urlParser.isRoot) {
+                this.main_title = title;
+                document.title = title;
+              } else {
+                document.title = this.main_title + ' - ' + title;
               }
-            });
+            }
+            updateLink(sel) {
+              var self = this;
+              $(sel).find('a').each(function(idx, elem) {
+                var elem$ = $(elem),
+                    urlParser = new UrlParser(elem$.attr('href'));
+                if (urlParser.isMd) {
+                  elem$.on('click', function(e) {
+                    self.updateContent(urlParser.href);
+                    return false;
+                  });
+                  elem$.attr('href', 'javascript:void(0)');
+                };
+              });
+            }
+            updateContent(href) {
+              var self = this;
+              this.urlParser.updateHref(href);
+              if (! this.urlParser.isMd) {
+                return;
+              }
+
+              $.ajax({
+                url: self.urlParser.fpath,
+                cache: false,
+                success: function(data) {
+                  var elem$ = $(TARGET_SEL);
+                  elem$.html(marked(data));
+                  self.updateLink(TARGET_SEL);
+                  self.updateDisplayUrl();
+                  self.updateTitle(elem$.find('h1').text());
+                },
+                error: function(xhr, errorType) {
+                  $(TARGET_SEL).append("failed to load.");
+                }
+              });
+            }
           };
 
       $(document).ready(function() {
-        updateLink('#header');
-        $('form.navbar-form').on('submit', function(e) {
-          updateContent($('form.navbar-form input')[0].value);
-          return false;
-        });
-        updateContent(document.URL);
+        var page = new Page();
       });
     </script>
   </body>
