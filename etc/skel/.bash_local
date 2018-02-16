@@ -6,7 +6,17 @@ if [ -z "$_USER_INITED" ] ; then
 	export MY_GIT_DIFF_ENC=UTF-8
 	export HGENCODING=utf-8
 	export SYSTEMD_PAGER=
+
+	# export HISTIGNORE="fg*:bg*:history*:cd*"
+	export HISTCONTROL=ignoreboth
+	export HISTSIZE=20000
+	export PROMPT_COMMAND="history -a"
+
+	export PIPSI_HOME=~/misc/var/pyvenv/pipsi/
+	export PIPSI_BIN_DIR=~/misc/bin/
+
 	export PATH=~/misc/bin:~/.local/bin:~/.local/sbin:/usr/local/sbin:/sbin:$PATH
+
 	export _USER_INITED=1
 fi
 
