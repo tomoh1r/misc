@@ -9,8 +9,6 @@ diff3.args = -m $local $base $other > $output
 
 [extensions]
 color =
-;pip install diff-highlight
-diff_highlight =
 eol =
 mq =
 progress =
@@ -18,6 +16,8 @@ rebase =
 record =
 transplant =
 histedit =
+; pip install hg-evolve
+evolve =
 
 [color]
 mode = auto
