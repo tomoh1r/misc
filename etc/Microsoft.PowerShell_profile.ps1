@@ -22,13 +22,6 @@ if($host.Name -eq 'ConsoleHost')
 
 # ### some ###
 
-# vim
-Set-Null-Env -Name "VIM"
-Set-Null-Env -Name "VIMRUNTIME"
-Remove-Item -ErrorAction SilentlyContinue Alias:vim
-Remove-Item -ErrorAction SilentlyContinue Alias:vi
-Set-Alias -name vi -value vim.exe
-
 # git diffw
 Set-Item -Path ENV:\MY_GIT_DIFF_ENC -Value CP932
 

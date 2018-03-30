@@ -7,6 +7,31 @@
 #   > Install-Module -Name Pscx -Scope CurrentUser -Force -AllowClobber
 #
 
+foreach($_name in @('VIM', 'VIMRUNTIME')) {
+    if ([Environment]::GetEnvironmentVariable($_name) -ne $null) {
+        [Environment]::SetEnvironmentVariable($_name, $null, "User")
+    }
+}
+Remove-Item -ErrorAction SilentlyContinue Alias:vi
+Remove-Item -ErrorAction SilentlyContinue Alias:vim
+Set-Alias -name vi -value vim.exe
+
+# for cmder NoProfile
+$_vimDir = "vim-kaoriya-develop"
+if ([Environment]::GetEnvironmentVariable('ConEmuTask') -ne $null -And `
+        $Env:ConEmuTask.ToLower().Contains('noprofile')) {
+    $Env:Path = "$HOME\Documents\Program\$_vimDir;$Env:Path"
+
+    [ScriptBlock]$Prompt = {
+        $global:LASTEXITCODE = $LASTEXITCODE
+        return "PS $(Get-Location)> "
+    }
+
+    Set-Item -Path Function:\Prompt -Value $Prompt -Options ReadOnly
+
+    exit 0
+}
+
 # $Env:JAVA_HOME = "C:\Program Files\Java\jdk1.8.0_121"
 # $Env:JRE_HOME = "C:\Program Files\Java\jre1.8.0_121"
 # $Env:Path = "$Env:JRE_HOME\bin;$Env:JAVA_HOME\bin;$Env:Path"
