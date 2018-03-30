@@ -7,14 +7,18 @@
 #   > Install-Module -Name Pscx -Scope CurrentUser -Force -AllowClobber
 #
 
-#. "$HOME\Documents\WindowsPowerShell\Modules\posh-git\profile.example.ps1"
+# $Env:JAVA_HOME = "C:\Program Files\Java\jdk1.8.0_121"
+# $Env:JRE_HOME = "C:\Program Files\Java\jre1.8.0_121"
+# $Env:Path = "$Env:JRE_HOME\bin;$Env:JAVA_HOME\bin;$Env:Path"
+# $_vimDir = "vim-kaoriya-develop"
+# $ENV:Path = "$HOME\Documents\Program\$_vimDir;$Env:Path"
+$Env:Path = "$HOME\misc\cmd;$Env:Path"
+
 . "$HOME\misc\etc\Microsoft.PowerShell_profile.ps1"
 
-# vim ÇÃê›íË
-#$ENV:Path = "$HOME\Documents\Application\vim80-kaoriya-win64-8.0.0039-20161016;$Env:Path"
-Remove-Item -ErrorAction SilentlyContinue Alias:vim
-
-Set-Alias -Name grep -Value Select-String
+# $ENV:GIT_EDITOR = "~/Documents/Program/$_vimDir/vim.exe"
+# $Env:GIT_SSH = "C:\Program Files\PuTTY\plink.exe"
+# $Env:APPENGINE_HOME = ""
 
 #Import-VisualStudioVars -VisualStudioVersion 2015 -Architecture amd64
 

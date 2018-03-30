@@ -25,8 +25,9 @@ if($host.Name -eq 'ConsoleHost')
 # vim
 Set-Null-Env -Name "VIM"
 Set-Null-Env -Name "VIMRUNTIME"
-Set-Alias -name vi -value vim.exe
 Remove-Item -ErrorAction SilentlyContinue Alias:vim
+Remove-Item -ErrorAction SilentlyContinue Alias:vi
+Set-Alias -name vi -value vim.exe
 
 # git diffw
 Set-Item -Path ENV:\MY_GIT_DIFF_ENC -Value CP932
@@ -41,7 +42,12 @@ Set-Alias -Name grep -Value Select-String
 #$ENV:DISTUTILS_USE_SDK = 1
 $ENV:PATHEXT += ";.PY"
 # & "~\.local\venv\Scripts\activate.ps1"
-#
+
+Set-Alias -Name grep -Value Select-String
+
+$Env:PIPSI_HOME = "$HOME\misc\var\pyvenv\pipsi"
+$Env:PIPSI_BIN_DIR = "$HOME\misc\cmd"
+
 # ### CleanUp & Common ###
 
 # something else
@@ -55,6 +61,9 @@ Set-Alias -Name ngen -Value (Join-Path ([System.Runtime.InteropServices.RuntimeE
             -and -not $_.Location.Contains("Pscx.Core.dll") `
             -and -not $_.Location.Contains("Pscx.dll") `
             -and -not $_.Location.Contains("SevenZipSharp.dll") `
+            -and -not $_.Location.Contains("Microsoft.PackageManagement.dll") `
+            -and -not $_.Location.Contains("Microsoft.PowerShell.PackageManagement.dll") `
+            -and -not $_.Location.Contains("PSWindowsUpdate.dll") `
             } |
     sort { Split-path $_.location -leaf } |
     % {
