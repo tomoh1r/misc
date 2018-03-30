@@ -47,22 +47,24 @@ $Env:PIPSI_BIN_DIR = "$HOME\misc\cmd"
 $ENV:PATH = [String]::Join(';', ($ENV:PATH -split ';' | ? {$_ -ne ''} | % {$_.Trim() -replace '/', '\'}))
 $ENV:PATHEXT = [String]::Join(';', ($ENV:PATHEXT -split ';' | ? {$_ -ne ''} | % { $_.Trim().ToUpper() }))
 
-Set-Alias -Name ngen -Value (Join-Path ([System.Runtime.InteropServices.RuntimeEnvironment]::GetRuntimeDirectory()) ngen.exe)
-[AppDomain]::CurrentDomain.GetAssemblies() |
-    where { ( $_.Location ) } |
-    where {      -not $_.Location.Contains("PSReadLine.dll") `
-            -and -not $_.Location.Contains("Pscx.Core.dll") `
-            -and -not $_.Location.Contains("Pscx.dll") `
-            -and -not $_.Location.Contains("SevenZipSharp.dll") `
-            -and -not $_.Location.Contains("Microsoft.PackageManagement.dll") `
-            -and -not $_.Location.Contains("Microsoft.PowerShell.PackageManagement.dll") `
-            -and -not $_.Location.Contains("PSWindowsUpdate.dll") `
-            } |
-    sort { Split-path $_.location -leaf } |
-    % {
-        if (-not [System.Runtime.InteropServices.RuntimeEnvironment]::FromGlobalAccessCache($_))
-        {
-            Write-Host -ForegroundColor Yellow "NGENing : $(Split-Path $_.location -leaf)"
-            ngen install $_.location /silent | %{"`t$_"}
-        }
-      }
+if ($PSVersionTable.PSVersion.Major -lt 6) {
+    Set-Alias -Name ngen -Value (Join-Path ([System.Runtime.InteropServices.RuntimeEnvironment]::GetRuntimeDirectory()) ngen.exe)
+    [AppDomain]::CurrentDomain.GetAssemblies() |
+        where { ( $_.Location ) } |
+        where {      -not $_.Location.Contains("PSReadLine.dll") `
+                -and -not $_.Location.Contains("Pscx.Core.dll") `
+                -and -not $_.Location.Contains("Pscx.dll") `
+                -and -not $_.Location.Contains("SevenZipSharp.dll") `
+                -and -not $_.Location.Contains("Microsoft.PackageManagement.dll") `
+                -and -not $_.Location.Contains("Microsoft.PowerShell.PackageManagement.dll") `
+                -and -not $_.Location.Contains("PSWindowsUpdate.dll") `
+                } |
+        sort { Split-path $_.location -leaf } |
+        % {
+            if (-not [System.Runtime.InteropServices.RuntimeEnvironment]::FromGlobalAccessCache($_))
+            {
+                Write-Host -ForegroundColor Yellow "NGENing : $(Split-Path $_.location -leaf)"
+                ngen install $_.location /silent | %{"`t$_"}
+            }
+          }
+}
