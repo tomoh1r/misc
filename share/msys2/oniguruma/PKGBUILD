@@ -1,0 +1,42 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+# vim:ts=2 sw=2 sts=2:
+# required=('base-devel' 'binutils')
+
+# update pkgver
+pkgname=oniguruma
+pkgver='6.8.1'
+extdirname="onig-${pkgver}"
+
+# main settings
+pkgrel=1
+arch=('x86_64')
+license=('BSD')
+url='https://github.com/kkos/oniguruma'
+groups=('devel')
+makedepends=('autoconf' 'make' 'gcc')
+source=('https://github.com/kkos/oniguruma/releases/download/v6.8.1/onig-6.8.1.tar.gz')
+md5sums=('78b115c3981435a961d26418684ea1f1')
+
+prepare() {
+  pushd "${srcdir}/${extdirname}"
+    autoreconf -vfi
+  popd
+}
+
+build() {
+  pushd "${srcdir}/${extdirname}"
+    ./configure
+    make
+  popd
+}
+
+check() {
+  pushd "${srcdir}/${extdirname}"
+  popd
+}
+
+package() {
+  pushd "${srcdir}/${extdirname}"
+    make -j1 DESTDIR="${pkgdir}/opt/${pkgname}-${pkgver}" install
+  popd
+}

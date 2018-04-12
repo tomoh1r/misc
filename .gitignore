@@ -40,3 +40,14 @@ share/sandbox/vagrant-chef/.vagrant
 /bin/aws*
 /bin/flake8
 /bin/hg
+/share/msys2/jq/jq-*-*-prepare.log*
+/share/msys2/jq/jq-*-*.pkg.tar.xz
+/share/msys2/jq/pkg/
+/share/msys2/jq/src/
+/share/msys2/oniguruma/oniguruma-*-*-build.log*
+/share/msys2/oniguruma/oniguruma-*-*-check.log*
+/share/msys2/oniguruma/oniguruma-*-*-prepare.log*
+/share/msys2/oniguruma/oniguruma-*-*-package.log*
+/share/msys2/oniguruma/oniguruma-*-*.pkg.tar.xz
+/share/msys2/oniguruma/pkg/
+/share/msys2/oniguruma/src/

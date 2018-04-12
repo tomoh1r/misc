@@ -1,0 +1,44 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+# vim:ts=2 sw=2 sts=2:
+# required=('base-devel' 'binutils')
+
+# update pkgver
+pkgname=jq
+pkgver='1.5'
+extdirname="${pkgname}-${pkgver}"
+onigurumadir='/opt/oniguruma-6.8.1'
+
+# main settings
+pkgrel=1
+arch=('x86_64')
+license=('BSD')
+url='https://stedolan.github.io/jq/'
+depends=('oniguruma')
+groups=('devel')
+makedepends=('flex' 'bison'  'libtool' 'autoconf' 'make' 'gcc')
+source=('https://github.com/stedolan/jq/releases/download/jq-1.5/jq-1.5.tar.gz')
+md5sums=('0933532b086bd8b6a41c1b162b1731f9')
+
+prepare() {
+  pushd "${srcdir}/${extdirname}"
+    autoreconf -i
+  popd
+}
+
+build() {
+  pushd "${srcdir}/${extdirname}"
+    ./configure --disable-maintainer-mode --with-oniguruma=${onigurumadir}
+    make
+  popd
+}
+
+check() {
+  pushd "${srcdir}/${extdirname}"
+  popd
+}
+
+package() {
+  pushd "${srcdir}/${extdirname}"
+    make -j1 DESTDIR="${pkgdir}/opt/${pkgname}-${pkgver}" install
+  popd
+}
