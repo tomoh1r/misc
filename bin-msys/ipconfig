@@ -1,0 +1,2 @@
+#! /bin/sh
+winpty.exe -Xplain /c/WINDOWS/System32/ipconfig.exe $*
