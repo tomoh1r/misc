@@ -5,12 +5,12 @@
   register: stat_python_bin
 
 - name: install the 'Development tools' package group
-  sudo: yes
+  become: yes
   dnf: name="@Development tools" state=present
   when: not stat_python_bin.stat.exists
 
 - name: install build depends
-  sudo: yes
+  become: yes
   dnf: name={{item}} state=present
   with_items:
     - zlib-devel
@@ -29,14 +29,14 @@
   when: not stat_python_bin.stat.exists
 
 - name: clear old src dir
-  sudo: yes
+  become: yes
   file: >-
     path="{{python_src_dir}}"
     state=absent
   when: not stat_python_bin.stat.exists
 
 - name: create work dir
-  sudo: yes
+  become: yes
   file: >-
     path="{{work_dir}}/python"
     state=directory mode=0777
@@ -65,14 +65,14 @@
   when: not stat_python_bin.stat.exists
 
 - name: mkdir install path
-  sudo: yes
+  become: yes
   file: >-
     path="{{python_prefix}}"
     state=directory
   when: not stat_python_bin.stat.exists
 
 - name: make install
-  sudo: yes
+  become: yes
   command: >-
     make install
     chdir="{{python_src_dir}}"

@@ -1,16 +1,16 @@
 ---
 - name: cp repo file
-  sudo: yes
+  become: yes
   copy: >-
     src=fc22-home-ocaml.repo
     dest=/etc/yum.repos.d/home:ocaml.repo
 
 - name: install opam
-  sudo: yes
+  become: yes
   dnf: name=opam state=latest
 
 - name: install patch
-  sudo: yes
+  become: yes
   dnf: name=patch state=latest
 
 - name: init opam

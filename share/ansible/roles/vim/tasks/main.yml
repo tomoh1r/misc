@@ -3,7 +3,7 @@
   register: stat_vim_bin
 
 - name: install build depends
-  sudo: yes
+  become: yes
   dnf: name={{item}} state=present
   with_items:
     - git
@@ -23,14 +23,14 @@
   when: not stat_vim_bin.stat.exists
 
 - name: clear work dir
-  sudo: yes
+  become: yes
   file: >-
     path="{{vim_build_dir}}"
     state=absent
   when: not stat_vim_bin.stat.exists
 
 - name: create work dir
-  sudo: yes
+  become: yes
   file: >-
     path="{{vim_build_dir}}"
     state=directory mode=0777
@@ -78,14 +78,14 @@
   when: not stat_vim_bin.stat.exists
 
 - name: mkdir install path
-  sudo: yes
+  become: yes
   file: >-
     path="{{vim_prefix}}"
     state=directory
   when: not stat_vim_bin.stat.exists
 
 - name: make install
-  sudo: yes
+  become: yes
   command: >-
     make install
     chdir="{{vim_build_dir}}/src"
