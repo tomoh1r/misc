@@ -1,0 +1,17 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  roles:
+    - role: 'setup'
+      tags: ['setup', 'always']
+    - role: 'git'
+      tags: 'git'
+    - role: 'vim'
+      tags: 'vim'
+    - role: 'python'
+      tags: 'python2'
+    - role: 'python'
+      tags: 'python3'
+    - role: 'ocaml'
+      tags: 'ocaml'
