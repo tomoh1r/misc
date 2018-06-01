@@ -1,22 +1,23 @@
 ---
 hostname: "fedora"
 email: "quickness.net@gmail.com"
+prefix: "/opt/mine"
 work_dir: "/opt/work"
 
 # vim
 vim:
   name: "vim"
-  ver: "v7.4.970"
-vim_build_dir: "{{ work_dir }}/{{vim.name}}"
-vim_prefix: "/opt/{{vim.name}}/{{vim.ver}}"
+  ver: "v8.1.0026"
+vim_build_dir: "{{work_dir}}/{{vim.name}}-{{vim.ver}}"
+vim_prefix: "{{prefix}}/{{vim.name}}-{{vim.ver}}"
 
 # python2
-python2_ver: "2.7.11"
+python2_ver: "2.7.15"
 python2_bin_ver: "2.7"
 
 # python3
-python3_ver: "3.5.1"
-python3_bin_ver: "3.5"
+python3_ver: "3.6.5"
+python3_bin_ver: "3.6"
 
 # ocaml
 ocaml_ver: "4.02.3"
