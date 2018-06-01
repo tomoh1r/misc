@@ -6,6 +6,9 @@ function SettingForPython()
   setl smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
   autocmd BufWritePre * :%s/\s\+$//ge
 endfunction
+function SettingForPHP()
+  se noex
+endfunction
 function SettingForRuby()
   setl tabstop=2 shiftwidth=2 softtabstop=2
   autocmd BufWritePre * :%s/\s\+$//ge
@@ -33,7 +36,7 @@ au FileType smarty se ft=htmldjango
 
 au FileType python call SettingForPython()
 au FileType plim call SettingForPLIM()
-au FileType php call SettingForPython()
+au FileType php call SettingForPHP()
 au FileType twig call SettingForPython()
 au FileType ruby call SettingForRuby()
 au FileType sh call SettingForPython()
