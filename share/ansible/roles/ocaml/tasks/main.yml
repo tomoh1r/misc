@@ -1,37 +1,25 @@
 ---
 - name: cp repo file
-  tags:
-    - ocaml
   sudo: yes
   copy: >-
     src=fc22-home-ocaml.repo
     dest=/etc/yum.repos.d/home:ocaml.repo
 
 - name: install opam
-  tags:
-    - ocaml
   sudo: yes
   dnf: name=opam state=latest
 
 - name: install patch
-  tags:
-    - ocaml
   sudo: yes
   dnf: name=patch state=latest
 
 - name: init opam
-  tags:
-    - ocaml
   command: opam init --comp={{ocaml_ver}}
 
 - name: install ocaml
-  tags:
-    - ocaml
   command: opam switch {{ocaml_ver}}
 
 - name: add opam config env
-  tags:
-    - ocaml
   shell: >-
     sed -i -e
     's/^#eval `opam config env`$/eval `opam config env`/'

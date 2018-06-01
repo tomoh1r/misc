@@ -1,12 +1,8 @@
 ---
 - stat: path="{{ vim_prefix }}/bin/vim"
   register: stat_vim_bin
-  tags:
-    - vim
 
 - name: install build depends
-  tags:
-    - vim
   sudo: yes
   dnf: name={{item}} state=present
   with_items:
@@ -27,8 +23,6 @@
   when: not stat_vim_bin.stat.exists
 
 - name: clear work dir
-  tags:
-    - vim
   sudo: yes
   file: >-
     path="{{vim_build_dir}}"
@@ -36,8 +30,6 @@
   when: not stat_vim_bin.stat.exists
 
 - name: create work dir
-  tags:
-    - vim
   sudo: yes
   file: >-
     path="{{vim_build_dir}}"
@@ -45,8 +37,6 @@
   when: not stat_vim_bin.stat.exists
 
 - name: clone src
-  tags:
-    - vim
   git: >-
     repo=https://github.com/vim/vim.git
     dest="{{vim_build_dir}}"
@@ -55,16 +45,12 @@
   when: not stat_vim_bin.stat.exists
 
 - name: make autoconf
-  tags:
-    - vim
   command: >-
     make autoconf
     chdir="{{vim_build_dir}}/src"
   when: not stat_vim_bin.stat.exists
 
 - name: configure
-  tags:
-    - vim
   command: >-
     ./configure
     --prefix="{{vim_prefix}}"
@@ -86,16 +72,12 @@
   when: not stat_vim_bin.stat.exists
 
 - name: make
-  tags:
-    - vim
   command: >-
     make
     chdir="{{vim_build_dir}}/src"
   when: not stat_vim_bin.stat.exists
 
 - name: mkdir install path
-  tags:
-    - vim
   sudo: yes
   file: >-
     path="{{vim_prefix}}"
@@ -103,8 +85,6 @@
   when: not stat_vim_bin.stat.exists
 
 - name: make install
-  tags:
-    - vim
   sudo: yes
   command: >-
     make install
@@ -112,23 +92,17 @@
   when: not stat_vim_bin.stat.exists
 
 - name: create bundle dir
-  tags:
-    - vim
   file: >-
     path="~/.vim/bundle"
     state=directory
 
 - name: clone neobundle.vim
-  tags:
-    - vim
   git: >-
     repo=https://github.com/Shougo/neobundle.vim.git
     dest="~/.vim/bundle/neobundle.vim"
     force=yes
 
 - name: clone vimproc.vim
-  tags:
-    - vim
   git: >-
     repo=https://github.com/Shougo/vimproc.vim.git
     dest="~/.vim/bundle/vimproc.vim"
@@ -136,26 +110,18 @@
 
 - stat: path="~/.vim/bundle/vimproc.vim/autoload/vimproc_linux64.so"
   register: stat_vimproc_linux64_so
-  tags:
-    - vim
 
 - name: make vimproc.vim
-  tags:
-    - vim
   command: >-
     make clean
     chdir="~/.vim/bundle/vimproc.vim"
 
 - name: make vimproc.vim
-  tags:
-    - vim
   command: >-
     make
     chdir="~/.vim/bundle/vimproc.vim"
 
 - name: init bundles
-  tags:
-    - vim
   command: >-
     {{ vim_prefix }}/bin/vim
     -N -U NONE -i NONE -V1 -e -s
@@ -167,16 +133,12 @@
   ignore_errors: yes
 
 - name: add path
-  tags:
-    - vim
   shell: >-
     sed -i -e
     's!^#export PATH="$VIM:$PATH"$!export PATH="{{vim_prefix}}/bin:$PATH"!'
     ~/.bash.include
 
 - name: update path
-  tags:
-    - vim
   shell: >-
     sed -i -e
     's!^export PATH="/opt/vim/.\+/bin:$PATH"$!export PATH="{{vim_prefix}}/bin:$PATH"!'
