@@ -10,7 +10,7 @@
 - name: change tz to JST
   become: yes
   command: timedatectl set-timezone Asia/Tokyo
-  when: tz.stdout.find('Asia/Tokyo') == -1
+  when: "'stdout' in tz and tz.stdout.find('Asia/Tokyo') == -1"
 
 - name: install the 'Development tools' package group
   become: yes
