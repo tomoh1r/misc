@@ -1,11 +1,4 @@
 ---
-- name: vars
-  vars:
-    git_src_url: "https://github.com/git/git/archive/{{git_ver}}.tar.gz"
-    git_src_fpath: "{{work_dir}}/git-{{git_ver}}.tar.gz"
-    git_unarchived: "{{work_dir}}/git-{{git_ver}}"
-    git_prefix: "{{prefix}}/git-{{git_ver}}"
-
 - stat: path="{{git_prefix}}/bin/git"
   register: stat_git
 

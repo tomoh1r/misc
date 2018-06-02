@@ -6,6 +6,10 @@ work_dir: "/opt/mine/work"
 
 # git
 git_ver: "v2.17.1"
+git_src_url: "https://github.com/git/git/archive/{{git_ver}}.tar.gz"
+git_src_fpath: "{{work_dir}}/git-{{git_ver}}.tar.gz"
+git_unarchived: "{{work_dir}}/git-{{git_ver}}"
+git_prefix: "{{prefix}}/git-{{git_ver}}"
 
 # vim
 vim:
