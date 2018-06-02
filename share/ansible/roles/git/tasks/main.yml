@@ -17,6 +17,7 @@
     - asciidoc
     - xmlto
     - docbook2X
+    - libselinux-python
 
 - name: create docbook2x-texi symbolic link
   when: not stat_git.stat.exists
@@ -38,14 +39,19 @@
   become: yes
   unarchive:
     src: "{{git_src_fpath}}"
-    dest: "{{git_unarchived}}"
+    dest: "{{work_dir}}"
+
+- name: make configure
+  when: not stat_git.stat.exists
+  become: yes
+  command: make configure
+  args:
+    chdir: "{{git_unarchived}}"
 
 - name: configure
   when: not stat_git.stat.exists
   become: yes
-  command: >-
-    make configure
-    ./configure --prefix="{{git_prefix}}"
+  command: ./configure --prefix="{{git_prefix}}"
   args:
     chdir: "{{git_unarchived}}"
 
