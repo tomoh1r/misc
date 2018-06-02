@@ -2,7 +2,10 @@
 hostname: "fedora"
 email: "quickness.net@gmail.com"
 prefix: "/opt/mine"
-work_dir: "/opt/work"
+work_dir: "/opt/mine/work"
+
+# git
+git_ver: "v2.17.1"
 
 # vim
 vim:
