@@ -40,6 +40,7 @@ share/sandbox/vagrant-chef/.vagrant
 /bin/aws*
 /bin/flake8
 /bin/hg
+/share/ansible/playbook.retry
 /share/msys2/jq/jq-*-*-prepare.log*
 /share/msys2/jq/jq-*-*.pkg.tar.xz
 /share/msys2/jq/pkg/
@@ -51,3 +52,10 @@ share/sandbox/vagrant-chef/.vagrant
 /share/msys2/oniguruma/oniguruma-*-*.pkg.tar.xz
 /share/msys2/oniguruma/pkg/
 /share/msys2/oniguruma/src/
+
+# wip
+/bin/composer.phar
+/bin/pew
+/bin/pipenv
+/bin/virtualenv
+/share/sandbox/docker-mysql/
