@@ -1,0 +1,61 @@
+---
+- name: install build depends
+  become: yes
+  dnf: name={{item}} state=present
+  with_items:
+    - dh-autoreconf
+    - curl-devel
+    - expat-devel
+    - gettext-devel
+    - openssl-devel
+    - perl-devel
+    - zlib-devel
+    - asciidoc
+    - xmlto
+    - docbook2X
+    - libselinux-python
+
+- name: create docbook2x-texi symbolic link
+  become: yes
+  file:
+    src: /usr/bin/db2x_docbook2texi
+    dest: /usr/bin/docbook2x-texi
+    state: link
+
+- name: fetch src archive
+  become: yes
+  get_url:
+    url: "{{git_src_url}}"
+    dest: "{{git_src_fpath}}"
+
+- name: extrace src archive
+  become: yes
+  unarchive:
+    src: "{{git_src_fpath}}"
+    dest: "{{work_dir}}"
+
+- name: make configure
+  become: yes
+  command: make configure
+  args:
+    chdir: "{{git_unarchived}}"
+
+- name: configure
+  become: yes
+  command: ./configure --prefix="{{git_prefix}}"
+  args:
+    chdir: "{{git_unarchived}}"
+
+- name: make
+  become: yes
+  command: make all doc info
+  args:
+    chdir: "{{git_unarchived}}"
+
+- name: make install
+  become: yes
+  command: make install install-doc install-html install-info
+  args:
+    chdir: "{{git_unarchived}}"
+
+# vim:st=2 sts=2 sw=2:

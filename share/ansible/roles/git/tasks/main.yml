@@ -1,72 +1,14 @@
 ---
-- stat: path="{{git_prefix}}/bin/git"
+- stat: path="{{prefix}}/git-{{git_ver}}"
   register: stat_git
 
-- name: install build depends
+- name: make git
   when: not stat_git.stat.exists
-  become: yes
-  dnf: name={{item}} state=present
-  with_items:
-    - dh-autoreconf
-    - curl-devel
-    - expat-devel
-    - gettext-devel
-    - openssl-devel
-    - perl-devel
-    - zlib-devel
-    - asciidoc
-    - xmlto
-    - docbook2X
-    - libselinux-python
-
-- name: create docbook2x-texi symbolic link
-  when: not stat_git.stat.exists
-  become: yes
-  file:
-    src: /usr/bin/db2x_docbook2texi
-    dest: /usr/bin/docbook2x-texi
-    state: link
-
-- name: fetch src archive
-  when: not stat_git.stat.exists
-  become: yes
-  get_url:
-    url: "{{git_src_url}}"
-    dest: "{{git_src_fpath}}"
-
-- name: extrace src archive
-  when: not stat_git.stat.exists
-  become: yes
-  unarchive:
-    src: "{{git_src_fpath}}"
-    dest: "{{work_dir}}"
-
-- name: make configure
-  when: not stat_git.stat.exists
-  become: yes
-  command: make configure
-  args:
-    chdir: "{{git_unarchived}}"
-
-- name: configure
-  when: not stat_git.stat.exists
-  become: yes
-  command: ./configure --prefix="{{git_prefix}}"
-  args:
-    chdir: "{{git_unarchived}}"
-
-- name: make
-  when: not stat_git.stat.exists
-  become: yes
-  command: make all doc info
-  args:
-    chdir: "{{git_unarchived}}"
-
-- name: make install
-  when: not stat_git.stat.exists
-  become: yes
-  command: make install install-doc install-html install-info
-  args:
-    chdir: "{{git_unarchived}}"
+  include: _make.yml
+  vars:
+    git_src_url: "https://github.com/git/git/archive/v{{git_ver}}.tar.gz"
+    git_src_fpath: "{{work_dir}}/git-{{git_ver}}.tar.gz"
+    git_unarchived: "{{work_dir}}/git-{{git_ver}}"
+    git_prefix: "{{prefix}}/git-{{git_ver}}"
 
 # vim:st=2 sts=2 sw=2:

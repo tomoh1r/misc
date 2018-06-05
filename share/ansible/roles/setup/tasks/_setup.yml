@@ -1,0 +1,46 @@
+---
+- name: get tz
+  shell: timedatectl | grep 'Time zone'
+  register: tz
+
+- name: change tz to JST
+  become: yes
+  when: "'stdout' in tz and tz.stdout.find('Asia/Tokyo') == -1"
+  command: timedatectl set-timezone Asia/Tokyo
+
+- name: install the 'Development tools' package group
+  become: yes
+  dnf: name="@Development tools" state=present
+
+- name: install tmux
+  become: yes
+  dnf: name=tmux state=latest
+
+- name: install msmtp
+  become: yes
+  dnf: name=msmtp state=latest
+
+- name: create work dir
+  become: yes
+  file: path="{{work_dir}}" state=directory
+
+- name: create .ssh dir
+  file:
+    path: "~/.ssh"
+    state: directory
+
+- stat: path="~/.ssh/id_rsa.pem"
+  register: stat_ssh_id_rsa_pem
+
+- name: create .ssh/id_rsa
+  command: ssh-keygen -t rsa -b 4096 -P "" -C "{{hostname}} {{email}}" -f ~/.ssh/id_rsa.pem
+  args:
+    chdir: "~/.ssh"
+
+- name: create flag file
+  become: yes
+  file:
+    path: "{{setup_flag_fpaht}}"
+    state: touch
+
+# vim:st=2 sts=2 sw=2:
