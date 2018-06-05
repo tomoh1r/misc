@@ -11,11 +11,7 @@ setup_flag_fpaht: "{{work_dir}}/.setup_flag_file"
 git_ver: "2.17.1"
 
 # vim
-vim:
-  name: "vim"
-  ver: "v8.1.0026"
-vim_build_dir: "{{work_dir}}/{{vim.name}}-{{vim.ver}}"
-vim_prefix: "{{prefix}}/{{vim.name}}-{{vim.ver}}"
+vim_ver: "8.1.0034"
 
 # python2
 python2_ver: "2.7.15"

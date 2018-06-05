@@ -1,0 +1,87 @@
+---
+- name: install build depends
+  become: yes
+  dnf: name={{item}} state=present
+  with_items:
+    - git
+    - gcc
+    - make
+    - autoconf
+    - ncurses-devel
+    - lua-devel
+    - luajit-devel
+    - gtk2-devel
+    - libXt-devel
+
+- name: clear work dir
+  become: yes
+  file:
+    path: "{{vim_unarchived}}"
+    state: absent
+
+- name: fetch src archive
+  become: yes
+  get_url:
+    url: "{{vim_src_url}}"
+    dest: "{{vim_src_fpath}}"
+
+- name: extrace src archive
+  become: yes
+  unarchive:
+    src: "{{vim_src_fpath}}"
+    dest: "{{work_dir}}"
+
+- name: configure
+  become: yes
+  command: >-
+    ./configure
+    --prefix="{{vim_prefix}}"
+    --with-features=huge
+    --without-x
+    --disable-gui
+    --enable-multibyte
+    --enable-luainterp=dynamic
+    --with-lua-prefix=/usr
+    --with-luajit
+    --enable-gpm
+    --enable-cscope
+    --enable-fontset
+    --enable-fail-if-missing
+  args:
+    chdir: "{{vim_unarchived}}/src"
+
+- name: make
+  become: yes
+  command: make
+  args:
+    chdir: "{{vim_unarchived}}/src"
+
+- name: make install
+  become: yes
+  command: make install
+  args:
+    chdir: "{{vim_unarchived}}/src"
+
+- name: create bundle dir
+  file:
+    path: "~/.vim/bundle"
+    state: directory
+
+- name: clone neobundle.vim
+  git:
+    repo: https://github.com/Shougo/neobundle.vim.git
+    dest: "~/.vim/bundle/neobundle.vim"
+    force: yes
+
+- name: init bundles
+  command: >-
+    "{{vim_prefix}}/bin/vim"
+    -N -U NONE -i NONE -V1 -e -s
+    --cmd "set encoding=utf-8"
+    --cmd "set termencoding=utf-8"
+    --cmd "source ~/.vimrc"
+    --cmd "NeoBundleInstall!"
+    --cmd "qall!"
+  ignore_errors: yes
+
+# vim:st=2 sts=2 sw=2:
