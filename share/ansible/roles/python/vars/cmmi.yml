@@ -1,0 +1,7 @@
+---
+python_prefix: "/opt/python/Python-{{python_ver}}"
+python_src_url: "https://www.python.org/ftp/python/{{python_ver}}/Python-{{python_ver}}.tgz"
+python_src: "{{work_dir}}/Python-{{python_ver}}.tgz"
+python_src_dir: "{{work_dir}}/Python-{{python_ver}}"
+
+# vim:st=2 sts=2 sw=2:

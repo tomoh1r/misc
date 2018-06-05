@@ -1,0 +1,59 @@
+---
+- name: define vars
+  include_vars: vars/cmmi.yml
+
+- name: install build depends
+  become: yes
+  dnf: name={{item}} state=present
+  with_items:
+    - zlib-devel
+    - bzip2-devel
+    - openssl-devel
+    - ncurses-devel
+    - sqlite-devel
+    - readline-devel
+    - gdbm-devel
+    - db4-devel
+    - libpcap-devel
+    - xz-devel
+    - tk-devel
+    - tcl-devel
+    - expat-devel
+
+- name: clear old src dir
+  become: yes
+  file:
+    path: "{{python_src_dir}}"
+    state: absent
+
+- name: fetch src archive
+  become: yes
+  get_url:
+    url: "{{python_src_url}}"
+    dest: "{{python_src}}"
+
+- name: unarchive
+  become: yes
+  unarchive:
+    src: "{{python_src}}"
+    dest: "{{work_dir}}"
+
+- name: configure
+  become: yes
+  command: "{{python_configure}}"
+  args:
+    chdir: "{{python_src_dir}}"
+
+- name: make
+  become: yes
+  command: make
+  args:
+    chdir: "{{python_src_dir}}"
+
+- name: make install
+  become: yes
+  command: make install
+  args:
+    chdir: "{{python_src_dir}}"
+
+# vim:st=2 sts=2 sw=2:

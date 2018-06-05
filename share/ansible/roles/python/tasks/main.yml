@@ -1,27 +1,32 @@
 ---
-- name: cmmi python2
-  tags:
-    - python2
-  include: vars.yml
-  vars:
-    python_ver: "{{python2_ver}}"
-    python_bin_ver: "{{python2_bin_ver}}"
-    python_src_hash: "{{python2_src_hash}}"
-    python_configure: >-
-      ./configure
-      --prefix="/opt/python/{{python2_ver}}"
-      --enable-unicode=ucs4
+# python2
+- stat: path="/opt/python/Python-{{python2_ver}}"
+  register: stat_python2
+  tags: python2
 
-- name: cmmi python3
-  tags:
-    - python3
-  include: vars.yml
-  vars:
-    python_ver: "{{python3_ver}}"
-    python_bin_ver: "{{python3_bin_ver}}"
-    python_src_hash: "{{python3_src_hash}}"
-    python_configure: >-
-      ./configure
-      --prefix="/opt/python/{{python3_ver}}"
+- name: define python2 vars
+  when: not stat_python2.stat.exists
+  include_vars: vars/python2.yml
+  tags: python2
+
+- name: make python2
+  when: not stat_python2.stat.exists
+  include: _cmmi.yml
+  tags: python2
+
+# python3
+- stat: path="/opt/python/Python-{{python3_ver}}"
+  register: stat_python3
+  tags: python3
+
+- name: define python3 vars
+  when: not stat_python3.stat.exists
+  include_vars: vars/python3.yml
+  tags: python3
+
+- name: make python3
+  when: not stat_python3.stat.exists
+  include: _cmmi.yml
+  tags: python3
 
 # vim:st=2 sts=2 sw=2:

@@ -1,0 +1,8 @@
+---
+python_ver: "{{python2_ver}}"
+python_configure: >-
+  ./configure
+  --prefix="/opt/mine/Python-{{python2_ver}}"
+  --enable-unicode=ucs4
+
+# vim:st=2 sts=2 sw=2:
