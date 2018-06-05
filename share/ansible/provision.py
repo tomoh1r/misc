@@ -28,6 +28,10 @@ class ProvisionCaller(object):
             action='store_true',
             help='add opts -D to ansible-playbook')
         parser.add_argument(
+            '--verbose', '-v',
+            action='store_true',
+            help='verbose output')
+        parser.add_argument(
             'tags', nargs='+', help='tags')
         return parser.parse_args()
 
@@ -38,6 +42,8 @@ class ProvisionCaller(object):
             cmds.append('--check')
         if args.diff:
             cmds.append('--diff')
+        if args.verbose:
+            cmds.append('--verbose')
         cmds.append('-t "{tags}" {rootdir}/playbook.yml')
         cmds = ' '.join(cmds)
 
