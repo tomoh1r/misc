@@ -1,0 +1,2 @@
+#! /bin/sh
+winpty.exe -Xallow-non-tty -Xplain /c/Program\ Files/PuTTY/plink.exe "$@"
