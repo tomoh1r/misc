@@ -32,7 +32,7 @@ class ProvisionCaller(object):
             action='store_true',
             help='verbose output')
         parser.add_argument(
-            'tags', nargs='+', help='tags')
+            'tags', nargs='*', help='tags')
         return parser.parse_args()
 
     def build_cmds(self):
@@ -49,7 +49,7 @@ class ProvisionCaller(object):
 
         return cmds.format(
             rootdir=self.rootdir,
-            tags=','.join(args.tags))
+            tags=','.join(args.tags or ['setup']))
 
 
 if __name__ == '__main__':
