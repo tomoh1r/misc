@@ -10,15 +10,15 @@
 
 - name: install the 'Development tools' package group
   become: yes
-  dnf: name="@Development tools" state=present
+  package: name="@Development tools" state=present
 
 - name: install tmux
   become: yes
-  dnf: name=tmux state=latest
+  package: name=tmux state=latest
 
 - name: install msmtp
   become: yes
-  dnf: name=msmtp state=latest
+  package: name=msmtp state=latest
 
 - name: create work dir
   become: yes

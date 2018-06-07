@@ -7,11 +7,11 @@
 
 - name: install opam
   become: yes
-  dnf: name=opam state=latest
+  package: name=opam state=latest
 
 - name: install patch
   become: yes
-  dnf: name=patch state=latest
+  package: name=patch state=latest
 
 - name: init opam
   command: opam init --comp={{ocaml_ver}}

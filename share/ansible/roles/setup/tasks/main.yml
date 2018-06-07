@@ -4,7 +4,7 @@
 
 - name: upgrade all packages
   become: yes
-  dnf: name=* state=latest
+  package: name=* state=latest
 
 - name: setup
   when: not stat_setup.stat.exists
