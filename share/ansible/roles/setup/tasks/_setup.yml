@@ -58,6 +58,11 @@
   args:
     chdir: "~/.ssh"
 
+- name: mv pub file
+  command: mv id_rsa.pem.pub id_rsa.pub
+  args:
+    chdir: "~/.ssh"
+
 - name: create flag file
   become: yes
   file:
