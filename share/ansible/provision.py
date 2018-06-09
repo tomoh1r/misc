@@ -20,6 +20,10 @@ class ProvisionCaller(object):
         parser = argparse.ArgumentParser(
             description='Wrapper for ansible-playbook.')
         parser.add_argument(
+            '--temp',
+            action='store_true',
+            help='target to temp host')
+        parser.add_argument(
             '--check', '-C',
             action='store_true',
             help='add opts -C to ansible-playbook')
@@ -37,18 +41,21 @@ class ProvisionCaller(object):
 
     def build_cmds(self):
         args = self.parse_args()
-        cmds = ['ansible-playbook -K -i {rootdir}/hosts']
+        cmds = ['ansible-playbook -K -i {inventory_fpath}']
         if args.check:
             cmds.append('--check')
         if args.diff:
             cmds.append('--diff')
         if args.verbose:
             cmds.append('--verbose')
-        cmds.append('-t "{tags}" {rootdir}/playbook.yml')
+        cmds.append('-t "{tags}" {playbook_fpath}')
         cmds = ' '.join(cmds)
 
         return cmds.format(
-            rootdir=self.rootdir,
+            inventory_fpath=os.path.join(
+                self.rootdir, 'inventories',
+                'temp' if args.temp else 'localhost'),
+            playbook_fpath=os.path.join(self.rootdir, 'playbook.yml'),
             tags=','.join(args.tags or ['setup']))
 
 
