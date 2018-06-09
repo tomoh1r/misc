@@ -19,19 +19,27 @@
     - "'stdout' in setup_redhat_release"
     - "'CentOS' in setup_redhat_release.stdout"
   become: yes
-  package: name="@Development tools" state=present
+  package:
+    name: epel-release
+    state: present
 
 - name: install the 'Development tools' package group
   become: yes
-  package: name="@Development tools" state=present
+  package:
+    name: "@Development tools"
+    state: present
 
 - name: install tmux
   become: yes
-  package: name=tmux state=latest
+  package:
+    name: tmux
+    state: latest
 
 - name: install msmtp
   become: yes
-  package: name=msmtp state=latest
+  package:
+    name: msmtp
+    state: latest
 
 - name: create work dir
   become: yes
