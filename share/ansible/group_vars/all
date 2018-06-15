@@ -1,8 +1,8 @@
 ---
 hostname: "fedora"
 email: "quickness.net@gmail.com"
-prefix: "/opt/mine"
-work_dir: "/opt/mine/work"
+prefix: "/opt/own"
+work_dir: "/opt/own/work"
 
 # setup
 setup_flag_fpaht: "{{work_dir}}/.setup_flag_file"
