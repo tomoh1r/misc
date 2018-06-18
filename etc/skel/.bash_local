@@ -3,6 +3,7 @@
 if [ -z "$_USER_INITED" ] ; then
 	export EDITOR=vim
 	export PAGER=less
+	export LESS='-R'
 	export MY_GIT_DIFF_ENC=UTF-8
 	export HGENCODING=utf-8
 	export SYSTEMD_PAGER=
@@ -15,13 +16,18 @@ if [ -z "$_USER_INITED" ] ; then
 	export PIPSI_HOME=~/misc/var/pyvenv/pipsi/
 	export PIPSI_BIN_DIR=~/misc/bin/
 
-	export PATH=~/misc/bin:~/.local/bin:~/.local/sbin:/usr/local/sbin:/sbin:$PATH
+	PATH=/usr/local/sbin:/sbin:$PATH
+	PATH=~/misc-work/bin:~/misc/bin:~/.local/bin:~/.local/sbin:$PATH
+	export PATH
 
 	export _USER_INITED=1
 fi
 
+#. ~/.bash_aliases
+
 ### 作業ブランチの表示
 #PS1="\$(git_branch)\$(hg_branch)[@\h \W]\$ "
+#PS1="\$(git_branch)[@\h \W]\r\n\$ "
 
 ### vim
 unset VIM
