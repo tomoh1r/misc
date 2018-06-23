@@ -7,7 +7,7 @@
   include: _make.yml
   vars:
     vim_src_url: "https://github.com/vim/vim/archive/v{{vim.version}}.tar.gz"
-    vim_src_fpath: "{{work_dir}}/vim-{{git_ver}}.tar.gz"
+    vim_src_fpath: "{{work_dir}}/vim-{{vim.version}}.tar.gz"
     vim_unarchived: "{{work_dir}}/vim-{{vim.version}}"
     vim_prefix: "{{prefix}}/vim-{{vim.version}}"
 
