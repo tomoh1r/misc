@@ -1,6 +1,17 @@
 ---
 - hosts: all
   gather_facts: no
+  vars:
+    hostname: "vm"
+    email: "quickness.net@gmail.com"
+    prefix: "/opt/own"
+    work_dir: "/opt/own/work"
+    setup_flag_fpaht: "{{work_dir}}/.setup_flag_file"
+    git_ver: "2.17.1"
+    vim_ver: "8.1.0034"
+    python2_ver: "2.7.15"
+    python3_ver: "3.6.5"
+    ocaml_ver: "4.02.3"
   roles:
     - role: 'setup'
       tags: ['setup', 'always']
@@ -14,3 +25,5 @@
       tags: 'python3'
     - role: 'ocaml'
       tags: 'ocaml'
+
+# vim:ft=yaml st=2 sts=2 sw=2:
