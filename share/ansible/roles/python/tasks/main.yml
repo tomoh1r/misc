@@ -1,6 +1,6 @@
 ---
 # python2
-- stat: path="/opt/python/Python-{{python2_ver}}"
+- stat: path="/opt/python/Python-{{python.py2_version}}"
   register: stat_python2
   tags: python2
 
@@ -15,7 +15,7 @@
   tags: python2
 
 # python3
-- stat: path="/opt/python/Python-{{python3_ver}}"
+- stat: path="/opt/python/Python-{{python.py2_version}}"
   register: stat_python3
   tags: python3
 

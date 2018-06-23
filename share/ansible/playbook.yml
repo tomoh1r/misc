@@ -5,13 +5,18 @@
     hostname: "vm"
     email: "quickness.net@gmail.com"
     prefix: "/opt/own"
-    work_dir: "/opt/own/work"
-    setup_flag_fpaht: "{{work_dir}}/.setup_flag_file"
-    git_ver: "2.17.1"
-    vim_ver: "8.1.0034"
-    python2_ver: "2.7.15"
-    python3_ver: "3.6.5"
-    ocaml_ver: "4.02.3"
+    work_dir: "{{prefix}}/work"
+    setup:
+      flag_fpaht: "{{work_dir}}/.setup_flag_file"
+    git:
+      version: "2.17.1"
+    vim:
+      version: "8.1.0034"
+    python:
+      py2_version: ".7.15"
+      py3_version: "3.6.5"
+    ocaml:
+      version: "4.02.3"
   roles:
     - role: 'setup'
       tags: ['setup', 'always']

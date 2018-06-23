@@ -14,10 +14,10 @@
   package: name=patch state=latest
 
 - name: init opam
-  command: opam init --comp={{ocaml_ver}}
+  command: opam init --comp={{ocaml.version}}
 
 - name: install ocaml
-  command: opam switch {{ocaml_ver}}
+  command: opam switch {{ocaml.version}}
 
 - name: add opam config env
   shell: >-

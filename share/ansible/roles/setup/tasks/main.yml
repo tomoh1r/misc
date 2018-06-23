@@ -1,5 +1,5 @@
 ---
-- stat: path="{{setup_flag_fpaht}}"
+- stat: path="{{setup.flag_fpaht}}"
   register: stat_setup
 
 - name: upgrade all packages

@@ -1,14 +1,14 @@
 ---
-- stat: path="{{prefix}}/git-{{git_ver}}"
+- stat: path="{{prefix}}/git-{{git.version}}"
   register: stat_git
 
 - name: make git
   when: not stat_git.stat.exists
   include: _make.yml
   vars:
-    git_src_url: "https://github.com/git/git/archive/v{{git_ver}}.tar.gz"
-    git_src_fpath: "{{work_dir}}/git-{{git_ver}}.tar.gz"
-    git_unarchived: "{{work_dir}}/git-{{git_ver}}"
-    git_prefix: "{{prefix}}/git-{{git_ver}}"
+    git_src_url: "https://github.com/git/git/archive/v{{git.version}}.tar.gz"
+    git_src_fpath: "{{work_dir}}/git-{{git.version}}.tar.gz"
+    git_unarchived: "{{work_dir}}/git-{{git.version}}"
+    git_prefix: "{{prefix}}/git-{{git.version}}"
 
 # vim:st=2 sts=2 sw=2:
