@@ -1,0 +1,12 @@
+---
+- name: fetch src archive
+  get_url:
+    url: "https://releases.hashicorp.com/terraform/{{terraform.version}}/terraform_{{terraform.version}}_linux_amd64.zip"
+    dest: "~/misc/tmp/terraform_{{terraform.version}}_linux_amd64.zip"
+
+- name: unarchive
+  unarchive:
+    src: "~/misc/tmp/terraform_{{terraform.version}}_linux_amd64.zip"
+    dest: "~/misc/bin"
+
+# vim:ft=yaml st=2 sts=2 sw=2:

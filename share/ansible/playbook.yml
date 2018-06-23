@@ -1,13 +1,13 @@
 ---
 - hosts: all
-  gather_facts: no
+  gather_facts: True
   vars:
     hostname: "vm"
     email: "quickness.net@gmail.com"
     prefix: "/opt/own"
-    work_dir: "{{prefix}}/work"
+    work_dir: "/opt/own/work"
     setup:
-      flag_fpaht: "{{work_dir}}/.setup_flag_file"
+      flag_fpaht: "/opt/own/work/.setup_flag_file"
     git:
       version: "2.17.1"
     vim:
@@ -17,6 +17,8 @@
       py3_version: "3.6.5"
     ocaml:
       version: "4.02.3"
+    terraform:
+      version: "0.11.7"
   roles:
     - role: 'setup'
       tags: ['setup', 'always']
@@ -28,6 +30,8 @@
       tags: 'python2'
     - role: 'python'
       tags: 'python3'
+    - role: 'terraform'
+      tags: 'terraform'
     - role: 'ocaml'
       tags: 'ocaml'
 
