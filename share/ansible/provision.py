@@ -8,11 +8,11 @@ import shlex
 import subprocess
 
 
+_ROOT_DIR = os.path.relpath(os.path.dirname(os.path.abspath(__file__)))
+
+
 class ProvisionCaller(object):
     def __call__(self):
-        here = os.path.dirname(os.path.abspath(__file__))
-        self.rootdir = os.path.relpath(here)
-
         proc = subprocess.Popen(shlex.split(self.build_cmds()))
         proc.communicate()
 
@@ -53,9 +53,9 @@ class ProvisionCaller(object):
 
         return cmds.format(
             inventory_fpath=os.path.join(
-                self.rootdir, 'inventories',
+                _ROOT_DIR, 'inventories',
                 'temp' if args.temp else 'localhost'),
-            playbook_fpath=os.path.join(self.rootdir, 'playbook.yml'),
+            playbook_fpath=os.path.join(_ROOT_DIR, 'playbook.yml'),
             tags=','.join(args.tags or ['setup']))
 
 
