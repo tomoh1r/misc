@@ -1,5 +1,6 @@
 ---
-- name: install build depends
+- name: (RedHat) install build depends
+  when: ansible_os_family == "RedHat"
   become: yes
   package: name={{item}} state=present
   with_items:
@@ -15,12 +16,29 @@
     - docbook2X
     - libselinux-python
 
-- name: create docbook2x-texi symbolic link
+- name: (RedHat) create docbook2x-texi symbolic link
+  when: ansible_os_family == "RedHat"
   become: yes
   file:
     src: /usr/bin/db2x_docbook2texi
     dest: /usr/bin/docbook2x-texi
     state: link
+
+- name: (Debian) install build depends
+  when: ansible_os_family == "Debian"
+  become: yes
+  package: name={{item}} state=present
+  with_items:
+    - dh-autoreconf
+    - libcurl4-gnutls-dev
+    - libexpat1-dev
+    - gettext
+    - libz-dev
+    - libssl-dev
+    - asciidoc
+    - xmlto
+    - docbook2x
+    - install-info
 
 - name: fetch src archive
   become: yes

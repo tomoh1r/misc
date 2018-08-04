@@ -1,5 +1,6 @@
 ---
-- name: install build depends
+- name: (RedHat) install build depends
+  when: ansible_os_family == "RedHat"
   become: yes
   package: name={{item}} state=present
   with_items:
@@ -12,6 +13,25 @@
     - luajit-devel
     - gtk2-devel
     - libXt-devel
+
+- name: (Debian) install build depends
+  when: ansible_os_family == "Debian"
+  become: yes
+  package: name={{item}} state=present
+  with_items:
+    - git
+    - gettext
+    - libtinfo-dev
+    - libacl1-dev
+    - libgpm-dev
+    - lua5.2
+    - liblua5.2-dev
+    - luajit
+    - libluajit-5.1-2
+    - libluajit-5.1-dev
+    - autoconf
+    - automake
+    - cproto
 
 - name: clear work dir
   become: yes

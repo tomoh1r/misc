@@ -1,32 +1,41 @@
 ---
-- name: get_os
-  shell: cat /etc/redhat-release
-  register: setup_redhat_release
+- name: check wsl
+  shell: "[ -e /mnt/c/Windows/System32/wsl.exe ] && echo 'y' || echo 'n'"
+  register: setup_wsl
 
 - name: get tz
   shell: timedatectl | grep 'Time zone'
+  when:
+    - "setup_wsl.stdout == 'n'"
   register: setup_tz
 
 - name: change tz to JST
-  become: yes
   when:
+    - "setup_wsl.stdout == 'n'"
     - "'stdout' in setup_tz"
     - "'Asia/Tokyo' not in setup_tz.stdout"
+  become: yes
   command: timedatectl set-timezone Asia/Tokyo
 
-- name: install epel-release
-  when:
-    - "'stdout' in setup_redhat_release"
-    - "'CentOS' in setup_redhat_release.stdout"
+- name: (RedHat cor) install epel-release
+  when: ansible_os_family == "RedHat"
   become: yes
   package:
     name: epel-release
     state: present
 
-- name: install the 'Development tools' package group
+- name: (RedHat cor) install the 'Development tools' package group
+  when: ansible_os_family == "RedHat"
   become: yes
   package:
     name: "@Development tools"
+    state: present
+
+- name: (Debian cor) install build-essential
+  when: ansible_os_family == "Debian"
+  become: yes
+  package:
+    name: build-essential
     state: present
 
 - name: install tmux
@@ -44,24 +53,6 @@
 - name: create work dir
   become: yes
   file: path="{{work_dir}}" state=directory
-
-- name: create .ssh dir
-  file:
-    path: "~/.ssh"
-    state: directory
-
-- stat: path="~/.ssh/id_rsa.pem"
-  register: stat_ssh_id_rsa_pem
-
-- name: create .ssh/id_rsa
-  command: ssh-keygen -t rsa -b 4096 -P "" -C "{{hostname}} {{email}}" -f ~/.ssh/id_rsa.pem
-  args:
-    chdir: "~/.ssh"
-
-- name: mv pub file
-  command: mv id_rsa.pem.pub id_rsa.pub
-  args:
-    chdir: "~/.ssh"
 
 - name: create flag file
   become: yes

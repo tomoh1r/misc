@@ -2,9 +2,19 @@
 - stat: path="{{setup.flag_fpaht}}"
   register: stat_setup
 
-- name: upgrade all packages
+- name: (RedHat cor) upgrade all packages
+  when: ansible_os_family == "RedHat"
   become: yes
-  package: name=* state=latest
+  package:
+    name: "*"
+    state: latest
+
+#- name: (Debian cor) upgrade all packages
+#  when: ansible_os_family == "Debian"
+#  become: yes
+#  apt:
+#    name: "*"
+#    state: latest
 
 - name: setup
   when: not stat_setup.stat.exists
