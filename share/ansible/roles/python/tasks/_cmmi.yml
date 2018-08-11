@@ -2,7 +2,8 @@
 - name: define vars
   include_vars: vars/cmmi.yml
 
-- name: install build depends
+- name: (RedHat) install build depends
+  when: ansible_os_family == "RedHat"
   become: yes
   package: name={{item}} state=present
   with_items:
@@ -19,6 +20,24 @@
     - tk-devel
     - tcl-devel
     - expat-devel
+
+- name: (Debian) install build depends
+  when: ansible_os_family == "Debian"
+  become: yes
+  package: name={{item}} state=present
+  with_items:
+    - libssl-dev
+    - zlib1g-dev
+    - libncurses5-dev
+    - libncursesw5-dev
+    - libreadline-dev
+    - libsqlite3-dev
+    - libgdbm-dev
+    - libdb5.3-dev
+    - libbz2-dev
+    - libexpat1-dev
+    - liblzma-dev
+    - tk-dev
 
 - name: clear old src dir
   become: yes
