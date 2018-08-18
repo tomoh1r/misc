@@ -57,4 +57,5 @@ endif
 " user settings
 
 "let g:flake8_cmd="/home/tomo/Documents/misc/bin/flake8"
-"colo default
+"colo dracula
+"se background=dark

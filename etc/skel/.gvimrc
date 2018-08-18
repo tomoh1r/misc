@@ -20,5 +20,5 @@ if has('win32')
 endif
 
 " 見た目
-colo default
-se background=light
+"colo dracula
+"se background=dark
