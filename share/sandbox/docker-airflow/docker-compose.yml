@@ -1,0 +1,16 @@
+---
+version: '3.7'
+services:
+  postgres:
+    image: postgres:10.5
+    #volumes:
+    #  - ${HOST_PGDATA:-./pgdata}:/pgdata
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-example}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-passw0rd}
+      - PGDATA=/pgdata
+    restart: unless-stopped
+
+# vim:ft=yaml st=2 sts=2 sw=2:
