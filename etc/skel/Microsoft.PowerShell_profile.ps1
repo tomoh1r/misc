@@ -50,7 +50,8 @@ $Env:Path = "$HOME\misc\cmd;$Env:Path"
 [ScriptBlock]$Prompt = {
     $global:LASTEXITCODE = $LASTEXITCODE
     Write-Host "$(Get-Git-Branch)$(Get-Hg-Branch)[$(Get-Date -Format 'yyyy/mm/dd hh:mm:ss')] PS $(Get-Pwd)"
+    $global:LASTEXITCODE = $realLASTEXITCODE
     return "> "
 }
 
-Set-Item -Path Function:\Prompt -Value $Prompt -Options ReadOnly
+Set-Item -Path Function:\Prompt -Value $Prompt
