@@ -9,9 +9,9 @@
     setup:
       flag_fpaht: "/opt/own/work/.setup_flag_file"
     git:
-      version: "2.17.1"
+      version: "2.18.0"
     vim:
-      version: "8.1.0034"
+      version: "8.1.0341"
     python:
       py2_version: "2.7.15"
       py3_version: "3.6.5"
