@@ -1,0 +1,2 @@
+#! /bin/sh
+python3 ~/misc/lib/flake8.pyz "$@"

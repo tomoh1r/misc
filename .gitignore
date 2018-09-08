@@ -38,7 +38,6 @@ share/sandbox/*/build/
 share/sandbox/vagrant-chef/.vagrant
 /bin/aws
 /bin/aws*
-/bin/flake8
 /bin/hg
 /share/ansible/playbook.retry
 /share/msys2/jq/jq-*-*-prepare.log*
