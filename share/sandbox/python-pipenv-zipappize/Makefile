@@ -22,5 +22,4 @@ build:
 	mv $(NAME).pyz $(ROOT)/misc/bin/$(NAME)
 
 clean:
-	[ -e $(NAME) ] && rm -r $(NAME)
-	[ -e venv ] && rm -r venv
+	for name in $(NAME) venv ; do ( if [ -d $name ] ; then rm -r $(NAME) ; fi ) ; done
