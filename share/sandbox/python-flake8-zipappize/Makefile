@@ -5,6 +5,7 @@
 # 		make -f share/sandbox/python-flake8-zipappize/Makefile
 #
 
+NAME=flake8
 ROOT=~
 
 .PHONY: all build clean
@@ -14,11 +15,12 @@ all: build
 build:
 	python3 -m venv --clear venv
 	./venv/bin/python3 $(ROOT)/misc/lib/get-pip.py
-	./venv/bin/python3 -m pip install -t flake8 flake8 setuptools
-	cp $(ROOT)/misc/share/sandbox/python-flake8-zipappize/__main__.py flake8/
-	python3 -m zipapp -p '/usr/bin/env python3' flake8/
-	mv flake8.pyz $(ROOT)/misc/bin/
+	./venv/bin/python3 -m pip install -t $(NAME) flake8 setuptools
+	cp $(ROOT)/misc/share/sandbox/python-$(NAME)-zipappize/__main__.py $(NAME)/
+	find $(NAME) -name '__pycache__' -print0 | xargs -0r rm -fr
+	python3 -m zipapp -p '/usr/bin/env python3' $(NAME)/
+	mv $(NAME).pyz $(ROOT)/misc/bin/$(NAME)
 
 clean:
-	rm -r flake8
-	rm -r venv
+	if [ -d $(NAME) ] ; then rm -r $(NAME) ; fi
+	if [ -d venv ] ; then rm -r venv ; fi
