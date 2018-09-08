@@ -14,7 +14,7 @@
       version: "8.1.0341"
     python:
       py2_version: "2.7.15"
-      py3_version: "3.6.5"
+      py3_version: "3.6.6"
     ocaml:
       version: "4.02.3"
     terraform:
