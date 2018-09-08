@@ -15,7 +15,7 @@ all: build
 build:
 	python3 -m venv --clear venv
 	./venv/bin/python3 $(ROOT)/misc/lib/get-pip.py
-	./venv/bin/python3 -m pip install -t $(NAME) pipenv
+	./venv/bin/python3 -m pip install -t $(NAME) pipenv pew
 	cp $(ROOT)/misc/share/sandbox/python-$(NAME)-zipappize/__main__.py $(NAME)/
 	find $(NAME) -name '__pycache__' -print0 | xargs -0r rm -fr
 	python3 -m zipapp -p '/usr/bin/env python3' $(NAME)/
