@@ -55,7 +55,6 @@ share/sandbox/vagrant-chef/.vagrant
 # wip
 /bin/composer.phar
 /bin/pew
-/bin/pipenv
 /bin/virtualenv
 /bin/terraform
 /share/sandbox/docker-mysql/
