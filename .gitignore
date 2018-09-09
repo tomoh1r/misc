@@ -51,6 +51,8 @@ share/sandbox/vagrant-chef/.vagrant
 /share/msys2/oniguruma/oniguruma-*-*.pkg.tar.xz
 /share/msys2/oniguruma/pkg/
 /share/msys2/oniguruma/src/
+/share/sandbox/python-venusian-pyramid/dev-app/dev_app.egg-info/
+/share/sandbox/python-venusian-pyramid/dev-common/dev_common.egg-info/
 
 # wip
 /bin/composer.phar
