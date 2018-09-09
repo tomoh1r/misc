@@ -1,0 +1,2 @@
+#! /bin/sh
+~/misc/var/pyvenv/venv/bin/docker-compose "$@"
