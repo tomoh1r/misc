@@ -9,5 +9,5 @@ $ sudo dnf install git-core ansible
 $ cd ~
 $ git clone git@github.com:tomoh1r/misc.git
 $ cd misc
-$ ./share/ansible/provision.py git vim python2 python3
+$ ./share/ansible/provision.py git python2 python3 vim
 ```

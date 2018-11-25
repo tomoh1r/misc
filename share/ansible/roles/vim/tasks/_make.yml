@@ -63,12 +63,15 @@
     --enable-luainterp=dynamic
     --with-lua-prefix=/usr
     --with-luajit
+    --enable-python3interp=dynamic
     --enable-gpm
     --enable-cscope
     --enable-fontset
     --enable-fail-if-missing
   args:
     chdir: "{{vim_unarchived}}/src"
+  environment:
+    PATH: "{{prefix}}/Python-{{python.py3_version}}/bin:{{ansible_env.PATH}}"
 
 - name: make
   become: yes

@@ -9,12 +9,12 @@
     setup:
       flag_fpaht: "/opt/own/work/.setup_flag_file"
     git:
-      version: "2.18.0"
+      version: "2.19.2"
     vim:
-      version: "8.1.0341"
+      version: "8.1.0547"
     python:
       py2_version: "2.7.15"
-      py3_version: "3.7.1"
+      py3_version: "3.6.7"
     ocaml:
       version: "4.02.3"
     terraform:
