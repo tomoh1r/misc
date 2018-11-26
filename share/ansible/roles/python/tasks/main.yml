@@ -1,5 +1,4 @@
 ---
-# python2
 - stat: path="/opt/own/Python-{{python.py2_version}}"
   register: stat_python2
   tags: python2
@@ -14,7 +13,6 @@
   include: _cmmi.yml
   tags: python2
 
-# python3
 - stat: path="/opt/own/Python-{{python.py3_version}}"
   register: stat_python3
   tags: python3
@@ -22,6 +20,20 @@
 - name: define python3 vars
   when: not stat_python3.stat.exists
   include_vars: vars/python3.yml
+  tags: python3
+
+- name: make python3
+  when: not stat_python3.stat.exists
+  include: _cmmi.yml
+  tags: python3
+
+- stat: path="/opt/own/Python-{{python.py3_version}}-shared"
+  register: stat_python3
+  tags: python3
+
+- name: define python3 vars
+  when: not stat_python3.stat.exists
+  include_vars: vars/python3-shared.yml
   tags: python3
 
 - name: make python3
