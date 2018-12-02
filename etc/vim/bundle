@@ -60,7 +60,7 @@ NeoBundleLazy 'PProvost/vim-ps1', {'autoload': {'filetypes': ['ps1']}}
 NeoBundleLazy 'fatih/vim-go', {'autoload': {'filetypes': ['go']}}
 
 " colo
-NeoBundle 'https://github.com/dracula/vim.git'
+NeoBundle 'https://github.com/tomasr/molokai'
 
 " Required:
 call neobundle#end()
