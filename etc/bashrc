@@ -10,7 +10,7 @@ shopt -u sourcepath
 shopt -s checkwinsize
 
 # ^C が残る対策
-stty -ctlecho
+[ -t 0 ] && stty -ctlecho
 
 # 履歴
 HISTSIZE=50000
