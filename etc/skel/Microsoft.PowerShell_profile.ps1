@@ -14,7 +14,6 @@ foreach($_name in @('VIM', 'VIMRUNTIME')) {
 }
 Remove-Item -ErrorAction SilentlyContinue Alias:vi
 Remove-Item -ErrorAction SilentlyContinue Alias:vim
-Set-Alias -name vi -value vim.exe
 
 # for cmder NoProfile
 $_vimDir = "vim-kaoriya-develop"
@@ -32,10 +31,14 @@ if ([Environment]::GetEnvironmentVariable('ConEmuTask') -ne $null -And `
     exit 0
 }
 
+Set-Alias -name vi -value nvim.exe$
+Set-Alias -name vim -value nvim.exe$
+
 # $Env:JAVA_HOME = "C:\Program Files\Java\jdk1.8.0_121"
 # $Env:JRE_HOME = "C:\Program Files\Java\jre1.8.0_121"
 # $Env:Path = "$Env:JRE_HOME\bin;$Env:JAVA_HOME\bin;$Env:Path"
-# $_vimDir = "vim-kaoriya-develop"
+
+# $_vimDir = "nvim-win64\Neovim\bin"
 # $ENV:Path = "$HOME\Documents\Program\$_vimDir;$Env:Path"
 $Env:Path = "$HOME\misc\cmd;$Env:Path"
 

@@ -29,6 +29,7 @@ if dein#load_state('~/.cache/dein')
 
   " colo
   call dein#add('tomasr/molokai')
+  call dein#add('altercation/vim-colors-solarized')
 
   " Required:
   call dein#end()
