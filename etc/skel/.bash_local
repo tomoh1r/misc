@@ -41,6 +41,7 @@ unset VIMRUNTIME
 #export VIMRUNTIME="$_vim/share/vim/vim74/"
 #export PATH="$VIM:$PATH"
 #unset _vim
+alias vim=nvim
 
 ### python
 #export PATH="/opt/Python/2.7.8/bin:$PATH"
