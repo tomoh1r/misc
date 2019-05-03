@@ -34,6 +34,7 @@ fi
 ### vim
 unset VIM
 unset VIMRUNTIME
+#alias vim=nvim
 #mkdir -p ~/.vim/bundle
 #git clone git://github.com/Shougo/neobundle.vim.git ~/.vim/bundle/neobundle.vim
 #_vim="/opt/vim/v7-4-692"
@@ -41,7 +42,6 @@ unset VIMRUNTIME
 #export VIMRUNTIME="$_vim/share/vim/vim74/"
 #export PATH="$VIM:$PATH"
 #unset _vim
-alias vim=nvim
 
 ### python
 #export PATH="/opt/Python/2.7.8/bin:$PATH"
