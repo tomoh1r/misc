@@ -27,6 +27,10 @@ if dein#load_state('~/.cache/dein')
   call dein#add('leafgarland/typescript-vim', {'on_ft': 'typescript'})
   call dein#add('jason0x43/vim-js-indent', {'on_ft': ['javascript', 'typescript']})
 
+  " Elixir
+  call dein#add('elixir-lang/vim-elixir')
+  call dein#add('BjRo/vim-extest', {'on_ft': 'elixir'})
+
   " colo
   call dein#add('tomasr/molokai')
   call dein#add('altercation/vim-colors-solarized')
