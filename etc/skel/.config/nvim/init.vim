@@ -11,4 +11,11 @@ exe 'so ~/misc/etc/vim/basis'
 
 colo slate
 
+"molokai
+
+"syntax enable
+"se bg=dark
+"let g:solarized_termcolors=256
+"colo solarized
+
 " vim:se ft=vim:
