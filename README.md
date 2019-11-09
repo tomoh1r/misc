@@ -3,6 +3,11 @@ miscellaneous
 
 misc misc misc
 
+If you use RHEL 8, then you'll need to install `ansible-2-for-rhel-8-x86_64-rpms`.
+
+```
+$ sudo subscription-manager repos --enable=ansible-2-for-rhel-8-x86_64-rpms
+```
 
 ```
 $ sudo dnf install git-core ansible
