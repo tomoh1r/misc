@@ -75,4 +75,4 @@
   args:
     chdir: "{{python_src_dir}}"
 
-# vim:st=2 sts=2 sw=2:
+# vim:sts=2 sw=2:
