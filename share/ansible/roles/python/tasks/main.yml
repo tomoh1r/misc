@@ -1,44 +1,176 @@
 ---
-- stat: path="/opt/own/Python-{{python.py2_version}}"
-  register: stat_python2
-  tags: python2
+- stat: path="/opt/own/Python-{{python.py27_version}}"
+  register: stat_python27
+  tags:
+    - never
+    - python27
 
-- name: define python2 vars
-  when: not stat_python2.stat.exists
-  include_vars: vars/python2.yml
-  tags: python2
+- stat: path="/opt/own/Python-{{python.py27_version}}-shared"
+  register: stat_python27_shared
+  tags:
+    - never
+    - python27-shared
 
-- name: make python2
-  when: not stat_python2.stat.exists
-  include: _cmmi.yml
-  tags: python2
+- stat: path="/opt/own/Python-{{python.py36_version}}"
+  register: stat_python36
+  tags:
+    - never
+    - python36
 
-- stat: path="/opt/own/Python-{{python.py3_version}}"
-  register: stat_python3
-  tags: python3
+- stat: path="/opt/own/Python-{{python.py36_version}}-shared"
+  register: stat_python36_shared
+  tags:
+    - never
+    - python36-shared
 
-- name: define python3 vars
-  when: not stat_python3.stat.exists
-  include_vars: vars/python3.yml
-  tags: python3
+- stat: path="/opt/own/Python-{{python.py37_version}}"
+  register: stat_python37
+  tags:
+    - never
+    - python37
 
-- name: make python3
-  when: not stat_python3.stat.exists
-  include: _cmmi.yml
-  tags: python3
+- stat: path="/opt/own/Python-{{python.py37_version}}-shared"
+  register: stat_python37_shared
+  tags:
+    - never
+    - python37-shared
 
-- stat: path="/opt/own/Python-{{python.py3_version}}-shared"
-  register: stat_python3
-  tags: python3
+- stat: path="/opt/own/Python-{{python.py38_version}}"
+  register: stat_python38
+  tags:
+    - never
+    - python38
 
-- name: define python3 vars
-  when: not stat_python3.stat.exists
-  include_vars: vars/python3-shared.yml
-  tags: python3
+- stat: path="/opt/own/Python-{{python.py38_version}}-shared"
+  register: stat_python38_shared
+  tags:
+    - never
+    - python38-shared
 
-- name: make python3
-  when: not stat_python3.stat.exists
-  include: _cmmi.yml
-  tags: python3
+- import_tasks: _cmmi.yml
+  vars:
+    python_target: "{{python.py27_version}}"
+    python_src_url: "https://www.python.org/ftp/python/{{python.py27_version}}/Python-{{python.py27_version}}.tgz"
+    python_src: "{{work_dir}}/Python-{{python.py27_version}}.tgz"
+    python_work_dir: "{{work_dir}}/Python-{{python.py27_version}}"
+    python_src_dir: "{{work_dir}}/Python-{{python.py27_version}}/Python-{{python.py27_version}}"
+    python_configure: >-
+      ./configure
+      --prefix="{{prefix}}/Python-{{python.py27_version}}"
+      --enable-unicode=ucs4
+  tags:
+    - never
+    - python27
+  when: not stat_python27.stat.exists
 
-  # vim:sts=2 sw=2:
+- import_tasks: _cmmi.yml
+  vars:
+    python_target: "{{python.py27_version}}-shared"
+    python_src_url: "https://www.python.org/ftp/python/{{python.py27_version}}/Python-{{python.py27_version}}.tgz"
+    python_src: "{{work_dir}}/Python-{{python.py27_version}}.tgz"
+    python_work_dir: "{{work_dir}}/Python-{{python.py27_version}}-shared"
+    python_src_dir: "{{work_dir}}/Python-{{python.py27_version}}-shared/Python-{{python.py27_version}}"
+    python_configure: >-
+      ./configure
+      --prefix="{{prefix}}/Python-{{python.py27_version}}-shared"
+      --enable-unicode=ucs4
+      --enable-shared
+  tags:
+    - never
+    - python27-shared
+  when: not stat_python27_shared.stat.exists
+
+- import_tasks: _cmmi.yml
+  vars:
+    python_target: "{{python.py36_version}}"
+    python_src_url: "https://www.python.org/ftp/python/{{python.py36_version}}/Python-{{python.py36_version}}.tgz"
+    python_src: "{{work_dir}}/Python-{{python.py36_version}}.tgz"
+    python_work_dir: "{{work_dir}}/Python-{{python.py36_version}}"
+    python_src_dir: "{{work_dir}}/Python-{{python.py36_version}}/Python-{{python.py36_version}}"
+    python_configure: >-
+      ./configure
+      --prefix="{{prefix}}/Python-{{python.py36_version}}"
+  tags:
+    - never
+    - python36
+  when: not stat_python36.stat.exists
+
+- import_tasks: _cmmi.yml
+  vars:
+    python_target: "{{python.py36_version}}-shared"
+    python_src_url: "https://www.python.org/ftp/python/{{python.py36_version}}/Python-{{python.py36_version}}.tgz"
+    python_src: "{{work_dir}}/Python-{{python.py36_version}}.tgz"
+    python_work_dir: "{{work_dir}}/Python-{{python.py36_version}}-shared"
+    python_src_dir: "{{work_dir}}/Python-{{python.py36_version}}-shared/Python-{{python.py36_version}}"
+    python_configure: >-
+      ./configure
+      --prefix="{{prefix}}/Python-{{python.py36_version}}-shared"
+      --enable-shared
+  tags:
+    - never
+    - python36-shared
+  when: not stat_python36_shared.stat.exists
+
+- import_tasks: _cmmi.yml
+  vars:
+    python_target: "{{python.py37_version}}"
+    python_src_url: "https://www.python.org/ftp/python/{{python.py37_version}}/Python-{{python.py37_version}}.tgz"
+    python_src: "{{work_dir}}/Python-{{python.py37_version}}.tgz"
+    python_work_dir: "{{work_dir}}/Python-{{python.py37_version}}"
+    python_src_dir: "{{work_dir}}/Python-{{python.py37_version}}/Python-{{python.py37_version}}"
+    python_configure: >-
+      ./configure
+      --prefix="{{prefix}}/Python-{{python.py37_version}}"
+  tags:
+    - never
+    - python37
+  when: not stat_python37.stat.exists
+
+- import_tasks: _cmmi.yml
+  vars:
+    python_target: "{{python.py37_version}}-shared"
+    python_src_url: "https://www.python.org/ftp/python/{{python.py37_version}}/Python-{{python.py37_version}}.tgz"
+    python_src: "{{work_dir}}/Python-{{python.py37_version}}.tgz"
+    python_work_dir: "{{work_dir}}/Python-{{python.py37_version}}-shared"
+    python_src_dir: "{{work_dir}}/Python-{{python.py37_version}}-shared/Python-{{python.py37_version}}"
+    python_configure: >-
+      ./configure
+      --prefix="{{prefix}}/Python-{{python.py37_version}}-shared"
+      --enable-shared
+  tags:
+    - never
+    - python37-shared
+  when: not stat_python37_shared.stat.exists
+
+- import_tasks: _cmmi.yml
+  vars:
+    python_target: "{{python.py38_version}}"
+    python_src_url: "https://www.python.org/ftp/python/{{python.py38_version}}/Python-{{python.py38_version}}.tgz"
+    python_src: "{{work_dir}}/Python-{{python.py38_version}}.tgz"
+    python_work_dir: "{{work_dir}}/Python-{{python.py38_version}}"
+    python_src_dir: "{{work_dir}}/Python-{{python.py38_version}}/Python-{{python.py38_version}}"
+    python_configure: >-
+      ./configure
+      --prefix="{{prefix}}/Python-{{python.py38_version}}"
+  tags:
+    - never
+    - python38
+  when: not stat_python38.stat.exists
+
+- import_tasks: _cmmi.yml
+  vars:
+    python_target: "{{python.py38_version}}-shared"
+    python_src_url: "https://www.python.org/ftp/python/{{python.py38_version}}/Python-{{python.py38_version}}.tgz"
+    python_src: "{{work_dir}}/Python-{{python.py38_version}}.tgz"
+    python_work_dir: "{{work_dir}}/Python-{{python.py38_version}}-shared"
+    python_src_dir: "{{work_dir}}/Python-{{python.py38_version}}-shared/Python-{{python.py38_version}}"
+    python_configure: >-
+      ./configure
+      --prefix="{{prefix}}/Python-{{python.py38_version}}-shared"
+      --enable-shared
+  tags:
+    - never
+    - python38-shared
+  when: not stat_python38_shared.stat.exists
+
+# vim:ft=yaml sts=2 sw=2:

@@ -9,30 +9,29 @@
     setup:
       flag_fpaht: "/opt/own/work/.setup_flag_file"
     git:
-      version: "2.22.0"
+      version: "2.24.1"
     vim:
       version: "8.1.0547"
     python:
-      py2_version: "2.7.16"
-      py3_version: "3.8.0"
+      py27_version: "2.7.17"
+      py36_version: "3.6.10"
+      py37_version: "3.7.6"
+      py38_version: "3.8.1"
     ocaml:
       version: "4.02.3"
     terraform:
       version: "0.11.7"
   roles:
     - role: 'setup'
-      tags: ['setup', 'always']
+      tags: 'always'
     - role: 'git'
-      tags: 'git'
+      tags: ['never', 'git']
     - role: 'vim'
-      tags: 'vim'
+      tags: ['never', 'vim']
     - role: 'python'
-      tags: 'python2'
-    - role: 'python'
-      tags: 'python3'
     - role: 'terraform'
-      tags: 'terraform'
+      tags: ['never', 'terraform']
     - role: 'ocaml'
-      tags: 'ocaml'
+      tags: ['never', 'ocaml']
 
 # vim:ft=yaml sts=2 sw=2:

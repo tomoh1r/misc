@@ -1,7 +1,0 @@
----
-python_version: "{{python.py3_version}}"
-python_configure: >-
-  ./configure
-  --prefix="{{prefix}}/Python-{{python_version}}"
-
-# vim:st=2 sts=2 sw=2:

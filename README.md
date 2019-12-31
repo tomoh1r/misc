@@ -14,5 +14,5 @@ $ sudo dnf install git-core ansible
 $ cd ~
 $ git clone git@github.com:tomoh1r/misc.git
 $ cd misc
-$ ansible-playbook --inventory=share/ansible/hosts --tags=setup share/ansible/hosts
+$ ansible-playbook --inventory=share/ansible/hosts --tags=setup --ask-become-pass share/ansible/playbook.yml
 ```
