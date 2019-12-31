@@ -11,8 +11,8 @@ import subprocess
 _ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
-class ProvisionCaller(object):
-    def __call__(self):
+class AnsibleProvisioner(object):
+    def execute(self):
         proc = subprocess.Popen(
             shlex.split(self.build_cmds()),
             cwd=_ROOT_DIR)
@@ -58,4 +58,4 @@ class ProvisionCaller(object):
 
 
 if __name__ == '__main__':
-    ProvisionCaller()()
+    AnsibleProvisioner().execute()
