@@ -2,19 +2,20 @@
 - name: (RedHat) install build depends
   when: ansible_os_family == "RedHat"
   become: yes
-  package: name={{item}} state=present
-  with_items:
-    - dh-autoreconf
-    - curl-devel
-    - expat-devel
-    - gettext-devel
-    - openssl-devel
-    - perl-devel
-    - zlib-devel
-    - asciidoc
-    - xmlto
-    - docbook2X
-    - libselinux-python
+  package:
+    name:
+      - dh-autoreconf
+      - curl-devel
+      - expat-devel
+      - gettext-devel
+      - openssl-devel
+      - perl-devel
+      - zlib-devel
+      - asciidoc
+      - xmlto
+      - docbook2X
+      - libselinux-python
+    state: present
 
 - name: (RedHat) create docbook2x-texi symbolic link
   when: ansible_os_family == "RedHat"
@@ -27,30 +28,26 @@
 - name: (Debian) install build depends
   when: ansible_os_family == "Debian"
   become: yes
-  package: name={{item}} state=present
-  with_items:
-    - dh-autoreconf
-    - libcurl4-gnutls-dev
-    - libexpat1-dev
-    - gettext
-    - libz-dev
-    - libssl-dev
-    - asciidoc
-    - xmlto
-    - docbook2x
-    - install-info
+  package:
+    name:
+      - dh-autoreconf
+      - libcurl4-gnutls-dev
+      - libexpat1-dev
+      - gettext
+      - libz-dev
+      - libssl-dev
+      - asciidoc
+      - xmlto
+      - docbook2x
+      - install-info
+    state: present
 
-- name: fetch src archive
-  become: yes
-  get_url:
-    url: "{{git_src_url}}"
-    dest: "{{git_src_fpath}}"
-
-- name: extrace src archive
+- name: fetch and extrace src archive
   become: yes
   unarchive:
-    src: "{{git_src_fpath}}"
+    src: "{{git_src_url}}"
     dest: "{{work_dir}}"
+    remote_src: yes
 
 - name: make configure
   become: yes
@@ -76,4 +73,4 @@
   args:
     chdir: "{{git_unarchived}}"
 
-# vim:st=2 sts=2 sw=2:
+# vim:ft=yaml sts=2 sw=2:
