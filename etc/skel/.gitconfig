@@ -24,3 +24,6 @@
 [credential]
 	helper = store --file ~/.git-credentials
 	helper = cache --timeout=300
+
+[advice]
+	detachedHead = false
