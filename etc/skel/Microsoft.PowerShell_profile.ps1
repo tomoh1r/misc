@@ -24,8 +24,16 @@ if ([Environment]::GetEnvironmentVariable('ConEmuTask') -ne $null -And `
     exit 0
 }
 
-Set-Alias -name vi -value nvim.exe$
-Set-Alias -name vim -value nvim.exe$
+if ($_isWin)
+{
+    Set-Alias -name vi -value nvim.exe
+    Set-Alias -name vim -value nvim.exe
+}
+else
+{
+    Set-Alias -name vi -value nvim
+    Set-Alias -name vim -value nvim
+}
 
 # $Env:JAVA_HOME = "C:\Program Files\Java\jdk1.8.0_121"
 # $Env:JRE_HOME = "C:\Program Files\Java\jre1.8.0_121"
