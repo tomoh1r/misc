@@ -1,5 +1,3 @@
-# cp932
-#
 # Init(Admin):
 #   > Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
 # Init:
@@ -7,19 +5,14 @@
 #   > Install-Module -Name Pscx -Scope CurrentUser -Force -AllowClobber
 #
 
-foreach($_name in @('VIM', 'VIMRUNTIME')) {
-    if ([Environment]::GetEnvironmentVariable($_name) -ne $null) {
-        [Environment]::SetEnvironmentVariable($_name, $null, "User")
-    }
-}
-Remove-Item -ErrorAction SilentlyContinue Alias:vi
-Remove-Item -ErrorAction SilentlyContinue Alias:vim
+$miscPath = $(Join-Path "$HOME/.local" "misc")
+. $(Join-Path $miscPath "etc/Microsoft.PowerShell_profile.ps1")
 
 # for cmder NoProfile
 $_vimDir = "vim-kaoriya-develop"
 if ([Environment]::GetEnvironmentVariable('ConEmuTask') -ne $null -And `
         $Env:ConEmuTask.ToLower().Contains('noprofile')) {
-    $Env:Path = "$HOME\Documents\Program\$_vimDir;$Env:Path"
+    Push-EnvPath $(Join-Path "$HOME/Documents/Program" $_vimDir)
 
     [ScriptBlock]$Prompt = {
         $global:LASTEXITCODE = $LASTEXITCODE
@@ -40,9 +33,11 @@ Set-Alias -name vim -value nvim.exe$
 
 # $_vimDir = "nvim-win64\Neovim\bin"
 # $ENV:Path = "$HOME\Documents\Program\$_vimDir;$Env:Path"
-$Env:Path = "$HOME\misc\cmd;$Env:Path"
-
-. "$HOME\misc\etc\Microsoft.PowerShell_profile.ps1"
+if ($_isWin) {
+    Push-EnvPath $(Join-Path $miscPath "cmd")
+} else {
+    Push-EnvPath $(Join-Path $miscPath "bin")
+}
 
 # $ENV:GIT_EDITOR = "~/Documents/Program/$_vimDir/vim.exe"
 # $Env:GIT_SSH = "C:\Program Files\PuTTY\plink.exe"
