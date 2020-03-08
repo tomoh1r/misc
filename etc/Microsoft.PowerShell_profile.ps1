@@ -74,7 +74,7 @@ function Import-DotEnv ()
                     }
                     elseif (-not $Env:PATHEXT.Contains($path))
                     {
-                        Set-Item -Path "Env:PATHEXT" -value $(Join-EnvPath $Env.PATHEXT $path)
+                        Set-Item -Path "Env:PATHEXT" -value $(Join-EnvPath $Env:PATHEXT $path)
                     }
                 }
             }
