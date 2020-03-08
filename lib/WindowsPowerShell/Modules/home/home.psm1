@@ -1,4 +1,4 @@
-Function Set-Null-Env {
+Function Set-NullEnv {
     Param ( $Name )
     Process {
         if ([Environment]::GetEnvironmentVariable($name) -ne $null) {
@@ -7,7 +7,7 @@ Function Set-Null-Env {
     }
 }
 
-Function Get-Reverse-Check(){
+Function Test-ExistsParentPath(){
     Param(
         $path,
         $dir_name
@@ -23,15 +23,15 @@ Function Get-Reverse-Check(){
             return $FALSE;
         }else{
             $_parent = Split-Path -Path $_path -Parent
-            Get-Reverse-Check $_parent $dir_name
+            Test-ExistsParentPath $_parent $dir_name
         }
     }
 }
 
-Function Get-Git-Branch(){
+Function Get-GitBranch(){
     Process
     {
-        if(-not (Get-Reverse-Check $PWD.Path '.git')){
+        if(-not (Test-ExistsParentPath $PWD.Path '.git')){
             return
         }
 
@@ -42,10 +42,10 @@ Function Get-Git-Branch(){
     }
 }
 
-Function Get-Hg-Branch(){
+Function Get-HgBranch(){
     Process
     {
-        if(-not (Get-Reverse-Check $PWD.Path '.hg')){
+        if(-not (Test-ExistsParentPath $PWD.Path '.hg')){
             return
         }
 
@@ -78,9 +78,9 @@ Function Set-LocationExHome() {
 
     Process {
         if([string]::IsNullOrEmpty("$Path")){
-            Pscx\Set-LocationEx -Path $HOME
+            Set-Location -Path $HOME
         }else{
-            Pscx\Set-LocationEx -Path $Path
+            Set-Location -Path $Path
         }
     }
 }
