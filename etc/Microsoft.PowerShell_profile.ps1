@@ -61,28 +61,25 @@ function Import-DotEnv ()
         $splitted = $line.Trim().Split("=")
         if ($splitted.Length -eq 2) {
             $key, $value = $splitted[0].Trim(), $splitted[1].Trim()
-            if ($(Get-Item -Path "Env:$key" -ErrorAction Ignore).Length -eq 0 -and `
-                    (-not $key.StartsWith("#")))
+            if ($key -eq "PATH") { Push-EnvPath $value; }
+            if ($key -eq "PATHEXT")
             {
-                if ($key -eq "PATH") { Push-EnvPath $value; }
-                if ($key -eq "PATHEXT")
+                foreach ($path in $value.Split($pathsep))
                 {
-                    foreach ($path in $value.Split($pathsep))
+                    if ($Env:PATHEXT -eq $null)
                     {
-                        if ($Env:PATHEXT -eq $null)
-                        {
-                            Set-Item -Path "Env:PATHEXT" -value $path
-                        }
-                        elseif (-not $Env:PATHEXT.Contains($path))
-                        {
-                            $Env.PATHEXT = Join-EnvPath $Env.PATHEXT $path
-                        }
+                        Set-Item -Path "Env:PATHEXT" -value $path
+                    }
+                    elseif (-not $Env:PATHEXT.Contains($path))
+                    {
+                        $Env.PATHEXT = Join-EnvPath $Env.PATHEXT $path
                     }
                 }
-                else
-                {
-                    Set-Item -Path "Env:$key" -Value $value
-                }
+            }
+            elseif ($(Get-Item -Path "Env:$key" -ErrorAction Ignore).Length -eq 0 -and `
+                    (-not $key.StartsWith("#")))
+            {
+                Set-Item -Path "Env:$key" -Value $value
             }
         }
     }
