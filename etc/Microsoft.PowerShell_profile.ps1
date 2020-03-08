@@ -1,27 +1,22 @@
-# Install:
-#   Install-Module -Scope CurrentUser -Name Pscx -RequiredVersion 3.2.1.0 -AllowClobber
-#
-
-$global:_isWin = $false
-if ($IsWindows)
+if ($IsWindows -eq $null)
 {
-    $global:_isWin = $true
-}
-elseif ($PSVersionTable.Platform -eq "Win32NT")
-{
-    $global:_isWin = $true
-}
-elseif ($Env:OS -eq "Windows_NT")
-{
-    $global:_isWin = $true
+    $global:IsWindows = $false
+    if ($PSVersionTable.Platform -eq "Win32NT")
+    {
+        $global:IsWindows = $true
+    }
+    elseif ($Env:OS -eq "Windows_NT")
+    {
+        $global:IsWindows = $true
+    }
 }
 
 $OutputEncoding = [Text.Encoding]::Default
 $Env:LANG = "ja_JP.UTF-8"
-if ($_isWin) { $Env:LANG = "ja_JP.CP932"; }
+if ($IsWindows) { $Env:LANG = "ja_JP.CP932"; }
 
 $script:pathsep = ":"
-if ($_isWin) { $script:pathsep = ";"; }
+if ($IsWindows) { $script:pathsep = ";"; }
 $script:dirsep = [IO.Path]::DirectorySeparatorChar
 
 function Settle-Path ($param)
@@ -40,9 +35,15 @@ function Join-EnvPath ($first, $second)
     }
 }
 
-function Push-EnvPath ($path)
+function Push-EnvPath ($paths)
 {
-    $Env:PATH = $(Join-EnvPath $path $Env:PATH)
+    foreach ($path in $paths.Split($pathsep))
+    {
+        if (-not $Env:PATH.Contains($path))
+        {
+            $Env:PATH = $(Join-EnvPath $path $Env:PATH)
+        }
+    }
 }
 
 function Import-DotEnv ()
@@ -53,17 +54,35 @@ function Import-DotEnv ()
     }
 
     $fenc = [System.Text.Encoding]::GetEncoding(65001)
-    if ($_isWin) { $fenc = [System.Text.Encoding]::GetEncoding(932); }
+    if ($IsWindows) { $fenc = [System.Text.Encoding]::GetEncoding(932); }
     $fp = New-Object System.IO.StreamReader($fpath, $fenc)
     while (($line = $fp.ReadLine()) -ne $null)
     {
         $splitted = $line.Trim().Split("=")
         if ($splitted.Length -eq 2) {
-            $key, $value = $splitted
+            $key, $value = $splitted[0].Trim(), $splitted[1].Trim()
             if ($(Get-Item -Path "Env:$key" -ErrorAction Ignore).Length -eq 0 -and `
                     (-not $key.StartsWith("#")))
             {
-                Set-Item -Path "Env:$key" -Value $value
+                if ($key -eq "PATH") { Push-EnvPath $value; }
+                if ($key -eq "PATHEXT")
+                {
+                    foreach ($path in $value.Split($pathsep))
+                    {
+                        if ($Env:PATHEXT -eq $null)
+                        {
+                            Set-Item -Path "Env:PATHEXT" -value $path
+                        }
+                        elseif (-not $Env:PATHEXT.Contains($path))
+                        {
+                            $Env.PATHEXT = Join-EnvPath $Env.PATHEXT $path
+                        }
+                    }
+                }
+                else
+                {
+                    Set-Item -Path "Env:$key" -Value $value
+                }
             }
         }
     }
@@ -71,7 +90,7 @@ function Import-DotEnv ()
 }
 Import-DotEnv
 
-if ($Env:PATH -eq $null)
+if ($Env:PATH -eq $null -and $Env:Path -ne $null)
 {
     $Env:PATH = Settle-Path $Env:Path
 }
@@ -85,7 +104,7 @@ if ([Environment]::GetEnvironmentVariable('ConEmuTask') -ne $null -And `
     return
 }
 
-# ### Module ###
+# ### module ###
 
 $Env:PSModulePath = Join-EnvPath `
     $(Join-Path $miscPath "lib/WindowsPowerShell/Modules") `
@@ -94,44 +113,24 @@ $Env:PSModulePath = Join-EnvPath `
 Import-Module -Name posh-git
 Set-PSReadlineOption -EditMode Emacs
 
-# PowerShell ReadLine
-# see https://github.com/lzybkr/PSReadLine#installation
-if ($_isWin)
+if ($IsWindows)
 {
     Import-Module -Name Pscx
     Import-Module -Name PSWindowsUpdate
     Set-Alias -Name cd -Value home\Set-LocationExHome -Option AllScope
 }
 
-# ### some ###
+# ### common ###
 
-# git diffw
-$script:myGitDiffEnc = "UTF8"
-if ($_isWin) { $script:myGitDiffEnc = "CP932"; }
-Set-Item -Path ENV:\MY_GIT_DIFF_ENC -Value $script:myGitDiffEnc
-
-# grep
-Set-Alias -Name grep -Value Select-String
-
-# plink
-#Set-Alias -name plink -value "<plink path>"
-
-# Python
-#$ENV:DISTUTILS_USE_SDK = 1
-$Env:PATHEXT = $(Join-EnvPath $ENV:PATHEXT ".PY")
-# & "~\.local\venv\Scripts\activate.ps1"
+$local:binSuffix = ""
+if ($IsWindows) { $local:binSuffix = ".exe"; }
+Set-Alias -name vi -value "nvim${binSuffix}"
+Set-Alias -name vim -value "nvim${binSuffix}"
 
 Set-Alias -Name grep -Value Select-String
 
-$Env:PIPSI_HOME = $(Join-Path $miscPath "var/pyvenv/pipsi")
-$Env:PIPSI_BIN_DIR = $(Join-Path $miscPath "cmd")
-
-# ### CleanUp & Common ###
-
-# something else
-#$ENV:PATH = [String]::Join(';', ($ENV:PATH -split ';' | ? {$_ -ne ''} | % {$_.Trim() -replace '/', '\'}))
-#$ENV:PATHEXT = [String]::Join(';', ($ENV:PATHEXT -split ';' | ? {$_ -ne ''} | % { $_.Trim().ToUpper() }))
-
+# ### finalize ###
+# optimize
 if ($PSVersionTable.PSVersion.Major -lt 6)
 {
     Set-Alias -Name ngen -Value (Join-Path ([System.Runtime.InteropServices.RuntimeEnvironment]::GetRuntimeDirectory()) ngen.exe)
