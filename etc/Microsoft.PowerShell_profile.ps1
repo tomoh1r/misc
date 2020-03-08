@@ -61,6 +61,8 @@ function Import-DotEnv ()
         $splitted = $line.Trim().Split("=")
         if ($splitted.Length -eq 2) {
             $key, $value = $splitted[0].Trim(), $splitted[1].Trim()
+            if ($key -eq "" -or $value -eq "") { continue; }
+
             if ($key -eq "PATH") { Push-EnvPath $value; }
             if ($key -eq "PATHEXT")
             {
@@ -72,7 +74,7 @@ function Import-DotEnv ()
                     }
                     elseif (-not $Env:PATHEXT.Contains($path))
                     {
-                        $Env.PATHEXT = Join-EnvPath $Env.PATHEXT $path
+                        Set-Item -Path "Env:PATHEXT" -value $(Join-EnvPath $Env.PATHEXT $path)
                     }
                 }
             }
