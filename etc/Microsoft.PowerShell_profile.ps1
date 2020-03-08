@@ -55,6 +55,14 @@ if ([Environment]::GetEnvironmentVariable('ConEmuTask') -ne $null -And `
     return
 }
 
+function Import-ModuleEx ($name)
+{
+    if ($(Get-Module -ErrorAction Ignore $name) -eq $null)
+    {
+        Import-Module -Name $name
+    }
+}
+
 # ### init env ###
 
 & {
@@ -93,7 +101,7 @@ if ([Environment]::GetEnvironmentVariable('ConEmuTask') -ne $null -And `
                     }
                 }
             }
-            elseif ($(Get-Item -Path "Env:$key" -ErrorAction Ignore).Length -eq 0 -and `
+            elseif ($(Get-Item -Path "Env:$key" -ErrorAction Ignore) -eq $null -and `
                     (-not $key.StartsWith("#")))
             {
                 Set-Item -Path "Env:$key" -Value $value
@@ -109,13 +117,13 @@ $Env:PSModulePath = Join-EnvPath `
     $(Join-Path $miscPath "lib/WindowsPowerShell/Modules") `
     $Env:PSModulePath
 
-Import-Module -Name posh-git
+Import-ModuleEx -Name posh-git
 Set-PSReadlineOption -EditMode Emacs
 
 if ($IsWindows)
 {
-    Import-Module -Name Pscx
-    Import-Module -Name PSWindowsUpdate
+    Import-ModuleEx -Name Pscx
+    Import-ModuleEx -Name PSWindowsUpdate
     Set-Alias -Name cd -Value home\Set-LocationExHome -Option AllScope
 }
 
