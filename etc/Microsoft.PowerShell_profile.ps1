@@ -119,12 +119,13 @@ $Env:PSModulePath = Join-EnvPath `
 
 Import-ModuleEx -Name home
 Import-ModuleEx -Name posh-git
+Import-ModuleEx -Name PSReadLine
 Set-PSReadlineOption -EditMode Emacs
 Set-Alias cd home\Set-LocationExHome -Force -Scope Global -Option AllScope -Description "home alias"
 
 if ($IsWindows)
 {
-    Import-ModuleEx -Name Pscx
+    #Import-ModuleEx -Name Pscx
     Import-ModuleEx -Name PSWindowsUpdate
 }
 
