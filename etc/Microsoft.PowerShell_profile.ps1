@@ -46,8 +46,23 @@ function Push-EnvPath ($paths)
     }
 }
 
-function Import-DotEnv ()
-{
+Remove-Item -ErrorAction SilentlyContinue Alias:vi
+Remove-Item -ErrorAction SilentlyContinue Alias:vim
+
+# ### noprofile ###
+if ([Environment]::GetEnvironmentVariable('ConEmuTask') -ne $null -And `
+        $Env:ConEmuTask.ToLower().Contains('noprofile')) {
+    return
+}
+
+# ### init env ###
+
+& {
+    if ($Env:PATH -eq $null -and $Env:Path -ne $null)
+    {
+        $Env:PATH = Settle-Path $Env:Path
+    }
+
     $fpath = Join-Path $HOME ".env"
     if (-not $(Test-Path $fpath)) {
         return
@@ -86,21 +101,6 @@ function Import-DotEnv ()
         }
     }
     $fp.Close()
-}
-Import-DotEnv
-
-if ($Env:PATH -eq $null -and $Env:Path -ne $null)
-{
-    $Env:PATH = Settle-Path $Env:Path
-}
-
-Remove-Item -ErrorAction SilentlyContinue Alias:vi
-Remove-Item -ErrorAction SilentlyContinue Alias:vim
-
-# ### noprofile ###
-if ([Environment]::GetEnvironmentVariable('ConEmuTask') -ne $null -And `
-        $Env:ConEmuTask.ToLower().Contains('noprofile')) {
-    return
 }
 
 # ### module ###
