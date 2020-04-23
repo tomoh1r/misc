@@ -60,3 +60,4 @@ share/sandbox/vagrant-chef/.vagrant
 /bin/virtualenv
 /bin/terraform
 /share/sandbox/docker-mysql/
+/cmd/jq.exe
