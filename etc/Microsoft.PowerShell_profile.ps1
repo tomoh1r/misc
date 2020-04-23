@@ -121,6 +121,7 @@ Import-ModuleEx -Name home
 Import-ModuleEx -Name posh-git
 Import-ModuleEx -Name PSReadLine
 Set-PSReadlineOption -EditMode Emacs
+Set-PSReadlineOption -BellStyle None
 Set-Alias cd home\Set-LocationExHome -Force -Scope Global -Option AllScope -Description "home alias"
 
 if ($IsWindows)
