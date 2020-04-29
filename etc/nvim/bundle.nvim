@@ -31,6 +31,8 @@ if dein#load_state('~/.cache/dein')
   call dein#add('elixir-lang/vim-elixir')
   call dein#add('BjRo/vim-extest', {'on_ft': 'elixir'})
 
+  call dein#add('PProvost/vim-ps1', {'on_ft': 'ps1'})
+
   " colo
   call dein#add('tomasr/molokai')
   call dein#add('altercation/vim-colors-solarized')
