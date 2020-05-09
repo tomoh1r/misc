@@ -19,13 +19,16 @@ $script:pathsep = ":"
 if ($IsWindows) { $script:pathsep = ";"; }
 $script:dirsep = [IO.Path]::DirectorySeparatorChar
 
-function Settle-Path ($param)
+function Settle-Path
 {
-    return $(Split-Path $(Join-Path $param "aaa"))
+    Param ([string]$param)
+    $splitted = $param -replace '~', $HOME
+    return Split-Path -Path $(Join-Path -Path $splitted -Child dmy) -Parent
 }
 
-function Join-EnvPath ($first, $second)
+function Join-EnvPath
 {
+    Param ([string]$first, [string]$second)
     if ($first -ne $null -and $second -ne $null) {
         return "$(Settle-Path $first)${pathsep}$(Settle-Path $second)"
     } elseif ($first -ne $null) {
@@ -35,8 +38,9 @@ function Join-EnvPath ($first, $second)
     }
 }
 
-function Push-EnvPath ($paths)
+function Push-EnvPath
 {
+    Param([Array]$Paths)
     foreach ($path in $paths.Split($pathsep))
     {
         if (-not $Env:PATH.Contains($path))
