@@ -114,7 +114,7 @@ function Import-ModuleEx ($name)
 # ### module ###
 
 $Env:PSModulePath = Join-EnvPath `
-    $(Join-Path $miscPath "lib/WindowsPowerShell/Modules") `
+    $(Join-Path $miscPath lib | Join-Path -ChildPath WindowsPowerShell | Join-Path -ChildPath Modules) `
     $Env:PSModulePath
 
 Import-ModuleEx -Name home
@@ -138,28 +138,3 @@ Set-Alias -name vi -value "nvim${binSuffix}"
 Set-Alias -name vim -value "nvim${binSuffix}"
 
 Set-Alias -Name grep -Value Select-String
-
-# ### finalize ###
-# optimize
-if ($PSVersionTable.PSVersion.Major -lt 6)
-{
-    Set-Alias -Name ngen -Value (Join-Path ([System.Runtime.InteropServices.RuntimeEnvironment]::GetRuntimeDirectory()) ngen.exe)
-    [AppDomain]::CurrentDomain.GetAssemblies() |
-        where { ( $_.Location ) } |
-        where {      -not $_.Location.Contains("PSReadLine.dll") `
-                -and -not $_.Location.Contains("Pscx.Core.dll") `
-                -and -not $_.Location.Contains("Pscx.dll") `
-                -and -not $_.Location.Contains("SevenZipSharp.dll") `
-                -and -not $_.Location.Contains("Microsoft.PackageManagement.dll") `
-                -and -not $_.Location.Contains("Microsoft.PowerShell.PackageManagement.dll") `
-                -and -not $_.Location.Contains("PSWindowsUpdate.dll") `
-                } |
-        sort { Split-path $_.location -leaf } |
-        % {
-            if (-not [System.Runtime.InteropServices.RuntimeEnvironment]::FromGlobalAccessCache($_))
-            {
-                Write-Host -ForegroundColor Yellow "NGENing : $(Split-Path $_.location -leaf)"
-                ngen install $_.location /silent | %{"`t$_"}
-            }
-          }
-}
