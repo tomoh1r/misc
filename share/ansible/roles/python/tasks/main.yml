@@ -47,6 +47,12 @@
     - never
     - python38-shared
 
+- stat: path="/opt/own/Python-{{python.py39_version}}"
+  register: stat_python39
+  tags:
+    - never
+    - python39
+
 - import_tasks: _cmmi.yml
   vars:
     python_target: "{{python.py27_version}}"
@@ -172,5 +178,20 @@
     - never
     - python38-shared
   when: not stat_python38_shared.stat.exists
+
+- import_tasks: _cmmi.yml
+  vars:
+    python_target: "{{python.py39_version}}"
+    python_src_url: "https://www.python.org/ftp/python/{{python.py39_version}}/Python-{{python.py39_version}}.tgz"
+    python_src: "{{work_dir}}/Python-{{python.py39_version}}.tgz"
+    python_work_dir: "{{work_dir}}/Python-{{python.py39_version}}"
+    python_src_dir: "{{work_dir}}/Python-{{python.py39_version}}/Python-{{python.py39_version}}"
+    python_configure: >-
+      ./configure
+      --prefix="{{prefix}}/Python-{{python.py39_version}}"
+  tags:
+    - never
+    - python39
+  when: not stat_python39.stat.exists
 
 # vim:ft=yaml sts=2 sw=2:
