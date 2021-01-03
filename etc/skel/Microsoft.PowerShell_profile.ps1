@@ -1,25 +1,11 @@
-# cp932
-#
-# Init(Admin):
-#   > Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
-# Init:
-#   > Install-Module -Name posh-git -Scope CurrentUser -Force -AllowClobber
-#   > Install-Module -Name Pscx -Scope CurrentUser -Force -AllowClobber
-#
+$script:miscPath = $(Join-Path "$HOME/.local" "misc")
+. $(Join-Path $miscPath "etc/Microsoft.PowerShell_profile.ps1")
 
-foreach($_name in @('VIM', 'VIMRUNTIME')) {
-    if ([Environment]::GetEnvironmentVariable($_name) -ne $null) {
-        [Environment]::SetEnvironmentVariable($_name, $null, "User")
-    }
-}
-Remove-Item -ErrorAction SilentlyContinue Alias:vi
-Remove-Item -ErrorAction SilentlyContinue Alias:vim
-
-# for cmder NoProfile
+# ### noprofile ###
 $_vimDir = "vim-kaoriya-develop"
 if ([Environment]::GetEnvironmentVariable('ConEmuTask') -ne $null -And `
         $Env:ConEmuTask.ToLower().Contains('noprofile')) {
-    $Env:Path = "$HOME\Documents\Program\$_vimDir;$Env:Path"
+    Push-EnvPath $(Join-Path "$HOME/Documents/Program" $_vimDir)
 
     [ScriptBlock]$Prompt = {
         $global:LASTEXITCODE = $LASTEXITCODE
@@ -31,18 +17,15 @@ if ([Environment]::GetEnvironmentVariable('ConEmuTask') -ne $null -And `
     exit 0
 }
 
-Set-Alias -name vi -value nvim.exe$
-Set-Alias -name vim -value nvim.exe$
+# plink
+#Set-Alias -name plink -value "<plink path>"
 
 # $Env:JAVA_HOME = "C:\Program Files\Java\jdk1.8.0_121"
 # $Env:JRE_HOME = "C:\Program Files\Java\jre1.8.0_121"
-# $Env:Path = "$Env:JRE_HOME\bin;$Env:JAVA_HOME\bin;$Env:Path"
+# $Env:PATH = "$Env:JRE_HOME\bin;$Env:JAVA_HOME\bin;$Env:PATH"
 
 # $_vimDir = "nvim-win64\Neovim\bin"
-# $ENV:Path = "$HOME\Documents\Program\$_vimDir;$Env:Path"
-$Env:Path = "$HOME\misc\cmd;$Env:Path"
-
-. "$HOME\misc\etc\Microsoft.PowerShell_profile.ps1"
+# $ENV:PATH = "$HOME\Documents\Program\$_vimDir;$Env:PATH"
 
 # $ENV:GIT_EDITOR = "~/Documents/Program/$_vimDir/vim.exe"
 # $Env:GIT_SSH = "C:\Program Files\PuTTY\plink.exe"
@@ -52,7 +35,15 @@ $Env:Path = "$HOME\misc\cmd;$Env:Path"
 
 [ScriptBlock]$Prompt = {
     $global:LASTEXITCODE = $LASTEXITCODE
-    Write-Host "$(Get-Git-Branch)$(Get-Hg-Branch)[$(Get-Date -Format 'yyyy/mm/dd hh:mm:ss')] PS $(Get-Pwd)"
+
+    $local:prefix = $(Get-GitBranch)
+    if ($prefix -ne $null)
+    {
+        $local:prefix = "(${prefix}) "
+    }
+    #Write-Host "$(Get-GitBranch)[$(Get-Date -Format 'yyyy/mm/dd hh:mm:ss')] PS $(Get-Pwd)"
+    Write-Host "$prefix[$(Get-Date -Format 'yyyy/mm/dd hh:mm:ss')] PS $(Get-Pwd)"
+
     $global:LASTEXITCODE = $realLASTEXITCODE
     return "> "
 }

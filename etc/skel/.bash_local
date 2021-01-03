@@ -16,7 +16,7 @@ if [ -z "$_USER_INITED" ] ; then
 	export PIPSI_HOME=~/misc/var/pyvenv/pipsi/
 	export PIPSI_BIN_DIR=~/misc/bin/
 
-	PATH=/usr/local/sbin:/sbin:$PATH
+	PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
 	PATH=~/misc-work/bin:~/misc/bin:~/.local/bin:~/.local/sbin:$PATH
 	export PATH
 
@@ -34,7 +34,7 @@ fi
 ### vim
 unset VIM
 unset VIMRUNTIME
-#alias vim=nvim
+#unalias vi
 #mkdir -p ~/.vim/bundle
 #git clone git://github.com/Shougo/neobundle.vim.git ~/.vim/bundle/neobundle.vim
 #_vim="/opt/vim/v7-4-692"

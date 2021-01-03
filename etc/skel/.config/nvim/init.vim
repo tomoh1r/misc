@@ -4,10 +4,10 @@ if !1 | finish | endif
 " 基本的に bash のスクリプトを操作するので
 let g:is_bash = 1
 
-exe 'so ~/misc/etc/nvim/bundle.nvim'
-exe 'so ~/misc/etc/vim/encodings'
-exe 'so ~/misc/etc/vim/filetypes'
-exe 'so ~/misc/etc/vim/basis'
+exe 'so ~/.local/misc/etc/nvim/bundle.nvim'
+exe 'so ~/.local/misc/etc/vim/encodings'
+exe 'so ~/.local/misc/etc/vim/filetypes'
+exe 'so ~/.local/misc/etc/vim/basis'
 
 colo slate
 

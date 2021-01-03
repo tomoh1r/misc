@@ -1,78 +1,80 @@
 ---
-- name: define vars
-  include_vars: vars/cmmi.yml
-
-- name: (RedHat) install build depends
+- name: "{{python_target}} : (RedHat) install build depends"
   when: ansible_os_family == "RedHat"
   become: yes
-  package: name={{item}} state=present
-  with_items:
-    - zlib-devel
-    - bzip2-devel
-    - openssl-devel
-    - ncurses-devel
-    - sqlite-devel
-    - readline-devel
-    - gdbm-devel
-    - db4-devel
-    - libpcap-devel
-    - xz-devel
-    - tk-devel
-    - tcl-devel
-    - expat-devel
+  package:
+    name:
+      - libffi-devel
+      - zlib-devel
+      - bzip2-devel
+      - openssl-devel
+      - ncurses-devel
+      - sqlite-devel
+      - readline-devel
+      - gdbm-devel
+      - libdb-devel
+      - xz-devel
+      - tk-devel
+      - tcl-devel
+      - expat-devel
+    state: present
 
-- name: (Debian) install build depends
+- name: "{{python_target}} : (Debian) install build depends"
   when: ansible_os_family == "Debian"
   become: yes
-  package: name={{item}} state=present
-  with_items:
-    - libssl-dev
-    - zlib1g-dev
-    - libncurses5-dev
-    - libncursesw5-dev
-    - libreadline-dev
-    - libsqlite3-dev
-    - libgdbm-dev
-    - libdb5.3-dev
-    - libbz2-dev
-    - libexpat1-dev
-    - liblzma-dev
-    - tk-dev
+  package:
+    name:
+      - libffi-dev
+      - libssl-dev
+      - zlib1g-dev
+      - libncurses5-dev
+      - libncursesw5-dev
+      - libreadline-dev
+      - libsqlite3-dev
+      - libgdbm-dev
+      - libdb5.3-dev
+      - libbz2-dev
+      - libexpat1-dev
+      - liblzma-dev
+      - tk-dev
+    state: present
 
-- name: clear old src dir
+- name: "{{python_target}} : create work dir"
+  become: yes
+  file:
+    path: "{{python_work_dir}}"
+    state: directory
+    mode: '0755'
+
+- name: "{{python_target}} : clear old src dir"
   become: yes
   file:
     path: "{{python_src_dir}}"
     state: absent
 
-- name: fetch src archive
-  become: yes
-  get_url:
-    url: "{{python_src_url}}"
-    dest: "{{python_src}}"
-
-- name: unarchive
+- name: "{{python_target}} : fetch src archive and unarchive"
   become: yes
   unarchive:
-    src: "{{python_src}}"
-    dest: "{{work_dir}}"
+    src: "{{python_src_url}}"
+    dest: "{{python_work_dir}}"
+    remote_src: yes
 
-- name: configure
+- name: "{{python_target}} : configure"
   become: yes
   command: "{{python_configure}}"
   args:
     chdir: "{{python_src_dir}}"
 
-- name: make
+- name: "{{python_target}} : make"
   become: yes
   command: make
   args:
     chdir: "{{python_src_dir}}"
 
-- name: make install
+- name: "{{python_target}} : make install"
   become: yes
   command: make install
   args:
     chdir: "{{python_src_dir}}"
 
-# vim:st=2 sts=2 sw=2:
+# vim:ft=yaml sts=2 sw=2:

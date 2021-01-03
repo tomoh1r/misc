@@ -18,7 +18,7 @@
   command: timedatectl set-timezone Asia/Tokyo
 
 - name: (RedHat cor) install epel-release
-  when: ansible_os_family == "RedHat"
+  when: ansible_os_family == "RedHat" and ansible_distribution_version|int < 8
   become: yes
   package:
     name: epel-release
@@ -44,12 +44,6 @@
     name: tmux
     state: latest
 
-- name: install msmtp
-  become: yes
-  package:
-    name: msmtp
-    state: latest
-
 - name: create work dir
   become: yes
   file: path="{{work_dir}}" state=directory
@@ -60,4 +54,4 @@
     path: "{{setup.flag_fpaht}}"
     state: touch
 
-# vim:st=2 sts=2 sw=2:
+# vim:ft=yaml sts=2 sw=2:

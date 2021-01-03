@@ -16,8 +16,7 @@
 #    name: "*"
 #    state: latest
 
-- name: setup
+- import_tasks: _setup.yml
   when: not stat_setup.stat.exists
-  include: _setup.yml
 
-# vim:st=2 sts=2 sw=2:
+# vim:ft=yaml sts=2 sw=2:
