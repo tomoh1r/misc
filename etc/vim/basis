@@ -104,6 +104,7 @@ let g:NERDTreeIgnore=[
 \   '\.hg$',
 \   '\.git$',
 \   '__pycache__',
+\   '.pytest_cache',
 \   '\.egg-info',
 \   '\.cache',
 \   '\.idea',
