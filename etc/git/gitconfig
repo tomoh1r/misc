@@ -6,6 +6,9 @@
 	pager =
 	abbrev = 12
 
+[advice]
+	detachedHead = false
+
 [color]
 	ui = true
 
