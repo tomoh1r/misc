@@ -1,0 +1,12 @@
+#!/bin/bash
+
+(
+_user=$1
+_ip=$2
+_fpath=$3
+_fname=$(basename "$_fpath")
+_dst=$4
+
+_cmd=$(printf '%s\n' "put $_fpath" "rename $_fname $_dst")
+sftp -o "User=$_user" "$_ip" <<< "$_cmd"
+)
