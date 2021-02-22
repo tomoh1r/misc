@@ -1,2 +1,2 @@
-#! /bin/sh
-~/misc/var/pyvenv/venv/bin/docker-compose "$@"
+#!/bin/bash
+( COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 /usr/local/bin/docker-compose "${@}"; )
