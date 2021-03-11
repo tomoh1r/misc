@@ -1,5 +1,6 @@
 #!/bin/bash
-_res=$(aws sts get-session-token --serial-number "$AWS_MFA_DEVICE" --token-code "$1" --output json)
+_serno=$(aws --profile="$1" iam list-mfa-devices --output json | jq -r .MFADevices[0].SerialNumber)
+_res=$(aws sts get-session-token --serial-number "$_serno" --token-code "$2" --output json)
 export AWS_ACCESS_KEY_ID="$(echo "$_res" | jq -r .Credentials.AccessKeyId)"
 export AWS_SECRET_ACCESS_KEY="$(echo "$_res" | jq -r .Credentials.SecretAccessKey)"
 export AWS_SESSION_TOKEN="$(echo "$_res" | jq -r .Credentials.SessionToken)"
