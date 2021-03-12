@@ -1,6 +1,10 @@
 #!/bin/bash
-_serno=$(aws --profile="$1" iam list-mfa-devices --output json | jq -r .MFADevices[0].SerialNumber)
-_res=$(aws sts get-session-token --serial-number "$_serno" --token-code "$2" --output json)
+_profile_name="$1"
+_token_code="$2"
+
+_usrename=$(aws --profile="$_profile_name" sts get-caller-identity --output json | jq -r .Arn | sed -e 's/.*user\///')
+_serno=$(aws --profile="$_profile_name" iam list-mfa-devices --user-name "$_usrename" --output json | jq -r .MFADevices[0].SerialNumber)
+_res=$(aws --profile="$_profile_name" sts get-session-token --serial-number "$_serno" --token-code "$_token_code" --output json)
 export AWS_ACCESS_KEY_ID="$(echo "$_res" | jq -r .Credentials.AccessKeyId)"
 export AWS_SECRET_ACCESS_KEY="$(echo "$_res" | jq -r .Credentials.SecretAccessKey)"
 export AWS_SESSION_TOKEN="$(echo "$_res" | jq -r .Credentials.SessionToken)"
