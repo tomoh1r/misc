@@ -1,0 +1,4 @@
+#!/bin/bash
+curl -H "Content-type: application/json" -H "Accept: application/json" \
+         -sL -X GET httpbin.org/ip | \
+     jq -r .origin
