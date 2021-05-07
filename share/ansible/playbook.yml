@@ -16,8 +16,8 @@
       py27_version: "2.7.18"
       py36_version: "3.6.13"
       py37_version: "3.7.10"
-      py38_version: "3.8.8"
-      py39_version: "3.9.2"
+      py38_version: "3.8.10"
+      py39_version: "3.9.5"
     ocaml:
       version: "4.02.3"
     terraform:
