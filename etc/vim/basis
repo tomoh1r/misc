@@ -111,6 +111,7 @@ let g:NERDTreeIgnore=[
 \   '\.ipynb_checkpoints',
 \   '\.tox',
 \   '\.vagrant',
+\   '\.mvn',
 \]
 let g:NERDTreeDirArrows = 0
 let g:NERDTreeShowHidden=1
