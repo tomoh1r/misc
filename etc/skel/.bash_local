@@ -13,8 +13,8 @@ if [ -z "$_USER_INITED" ] ; then
 	export HISTSIZE=20000
 	export PROMPT_COMMAND="history -a"
 
-	export PIPSI_HOME=~/misc/var/pyvenv/pipsi/
-	export PIPSI_BIN_DIR=~/misc/bin/
+	export PIPX_HOME=~/.local/var/pipx
+	export PIPX_BIN_DIR=~/.local/bin
 
 	PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
 	PATH=~/misc-work/bin:~/misc/bin:~/.local/bin:~/.local/sbin:$PATH
