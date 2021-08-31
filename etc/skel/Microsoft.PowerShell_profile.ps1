@@ -49,3 +49,5 @@ if ([Environment]::GetEnvironmentVariable('ConEmuTask') -ne $null -And `
 }
 
 Set-Item -Path Function:\Prompt -Value $Prompt
+# Set-Location HOME if pwsh.exe
+if ($(Get-Location).Path -eq "C:\Windows\System32") { Set-Location $HOME; }
