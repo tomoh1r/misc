@@ -22,7 +22,7 @@ $script:dirsep = [IO.Path]::DirectorySeparatorChar
 function Settle-Path
 {
     Param ([string]$param)
-    $splitted = $param -replace '~', $HOME
+    $splitted = $param -replace '^~', $HOME
     return Split-Path -Path $(Join-Path -Path $splitted -Child dmy) -Parent
 }
 
