@@ -14,8 +14,8 @@ call dein#add('roxma/vim-hug-neovim-rpc')
 endif
 
 " NERD tree
-call dein#add('scrooloose/nerdtree')
-call dein#add('scrooloose/nerdcommenter')
+call dein#add('preservim/nerdtree')
+call dein#add('preservim/nerdcommenter')
 
 " Python
 call dein#add('nvie/vim-flake8', {'on_ft': 'python'})
