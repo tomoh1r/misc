@@ -14,10 +14,10 @@
       version: "8.1.0547"
     python:
       py27_version: "2.7.18"
-      py36_version: "3.6.14"
-      py37_version: "3.7.11"
-      py38_version: "3.8.11"
-      py39_version: "3.9.6"
+      py36_version: "3.6.15"
+      py37_version: "3.7.12"
+      py38_version: "3.8.12"
+      py39_version: "3.9.9"
     ocaml:
       version: "4.02.3"
     terraform:
