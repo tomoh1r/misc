@@ -28,11 +28,6 @@ _usage() {
 		  -v	set store jdk version (default 8, or 11, 17)
 		  -d	binary store destination (default /usr/lib/jvm)
 		  -h	show this usage
-		
-		JDKs:
-		  8  Temurin8	8u312b07
-		  11 Temurin11	11.0.13_8
-		  17 Temurin17	17.0.1_12
 		EOF
 		)
 	echo "$_USAGE"; exit 1;
@@ -40,7 +35,7 @@ _usage() {
 
 # parse args
 declare -i _install_flg=0
-declare -i _show_flg=0
+declare -l _show_flg=0
 declare _version="08"
 declare _dst="/usr/lib/jvm"
 declare -i _cnt=0
