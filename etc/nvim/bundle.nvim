@@ -33,6 +33,9 @@ call dein#add('BjRo/vim-extest', {'on_ft': 'elixir'})
 " PowerShell
 call dein#add('PProvost/vim-ps1', {'on_ft': 'ps1'})
 
+" Kotlin
+call dein#add('udalov/kotlin-vim', {'on_ft': 'kotlin'})
+
 " Terraform
 call dein#add('hashivim/vim-terraform')
 

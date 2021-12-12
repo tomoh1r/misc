@@ -59,6 +59,9 @@ NeoBundleLazy 'PProvost/vim-ps1', {'autoload': {'filetypes': ['ps1']}}
 " Golang
 NeoBundleLazy 'fatih/vim-go', {'autoload': {'filetypes': ['go']}}
 
+" Kotlin
+NeoBundleLazy 'udalov/kotlin-vim', {'autoload': {'filetypes': ['kotlin']}}
+
 " colo
 NeoBundle 'https://github.com/tomasr/molokai'
 
