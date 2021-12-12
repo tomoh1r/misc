@@ -5,8 +5,6 @@ _dir=$(dirname "$0")
 
 # default values
 # Mavenのインストールもと
-#'https://dlcdn.apache.org/maven/maven-3/3.8.4/binaries/apache-maven-3.8.4-bin.tar.gz'
-#'https://dlcdn.apache.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz'
 _base_url='https://dlcdn.apache.org/maven/maven-3/%s/binaries/%s'
 _url_36=$(printf "$_base_url" \
 	'3.6.3' \
