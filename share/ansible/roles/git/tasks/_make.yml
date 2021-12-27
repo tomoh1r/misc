@@ -14,7 +14,6 @@
       - asciidoc
       - xmlto
       - docbook2X
-      - libselinux-python
     state: present
 
 - name: (RedHat) create docbook2x-texi symbolic link
