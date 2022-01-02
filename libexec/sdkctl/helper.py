@@ -16,6 +16,17 @@ def get_settings(section, option):
     return cfg.get(section, option)
 
 
+def get_dl_src_mapping(section):
+    mapping = {}
+    for ver in get_settings(section, "versions").split(","):
+        ver = str(ver)
+        mapping[ver] = {
+            "url": get_settings(section, ver + " url"),
+            "name": get_settings(section, ver + " name"),
+        }
+    return mapping
+
+
 def download(src, dst):
     pass
 
