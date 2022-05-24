@@ -40,13 +40,17 @@ function Join-EnvPath
 
 function Push-EnvPath
 {
-    Param([Array]$Paths)
+    param([Array]$Paths)
+    $local:dstPath = [System.Collections.ArrayList]::new()
     foreach ($path in $paths.Split($pathsep))
     {
         if (-not $Env:PATH.Contains($path))
         {
-            $Env:PATH = $(Join-EnvPath $path $Env:PATH)
+            [void]$dstPath.Add($path)
         }
+    }
+    if ($dstPath.Count -ne 0) {
+        $Env:Path = $(Join-EnvPath $($dstPath.ToArray() -join $pathsep) $Env:PATH)
     }
 }
 
