@@ -21,19 +21,19 @@ $script:dirsep = [IO.Path]::DirectorySeparatorChar
 
 function Settle-Path
 {
-    Param ([string]$param)
-    $splitted = $param -replace '^~', $HOME
+    param ([string]$path)
+    $splitted = $path -replace '^~', $HOME
     return Split-Path -Path $(Join-Path -Path $splitted -Child dmy) -Parent
 }
 
 function Join-EnvPath
 {
-    Param ([string]$first, [string]$second)
-    if ($first -ne $null -and $second -ne $null) {
-        return "$(Settle-Path $first)${pathsep}$(Settle-Path $second)"
-    } elseif ($first -ne $null) {
+    param ([string]$first, [string]$second)
+    if ($first -ne "" -and $second -ne "") {
+        return "$($first)${pathsep}$(Settle-Path $second)"
+    } elseif ($first -ne "") {
         return $(Settle-Path $first)
-    } elseif ($second -ne $null) {
+    } elseif ($second -ne "") {
         return $(Settle-Path $second)
     }
 }
@@ -44,9 +44,10 @@ function Push-EnvPath
     $local:dstPath = [System.Collections.ArrayList]::new()
     foreach ($path in $paths.Split($pathsep))
     {
-        if (-not $Env:PATH.Contains($path))
+        $local:settled = $(Settle-Path $path)
+        if (-not $Env:PATH.Contains($settled))
         {
-            [void]$dstPath.Add($path)
+            [void]$dstPath.Add($settled)
         }
     }
     if ($dstPath.Count -ne 0) {
