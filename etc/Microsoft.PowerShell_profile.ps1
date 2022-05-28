@@ -19,6 +19,40 @@ $script:pathsep = ":"
 if ($IsWindows) { $script:pathsep = ";"; }
 $script:dirsep = [IO.Path]::DirectorySeparatorChar
 
+function Get-ShortPath
+{
+    param([string]$name)
+    begin { $local:fso = New-Object -ComObject Scripting.FileSystemObject }
+    process
+    {
+        $local:result = $null
+        foreach ($path in $name.Split($dirsep))
+        {
+            if ($result -eq $null)
+            {
+                $local:result = $path
+            }
+            else
+            {
+                $local:joined = $(Join-Path -Path $result -Child $path)
+                try {
+                    $local:fsi = $(Get-Item $joined -ErrorAction Stop)
+                }
+                catch
+                {
+                    $local:result = $joined
+                    continue
+                }
+                $local:result = $fsi.psiscontainer ?
+                   $fso.GetFolder($fsi.FullName).ShortPath :
+                   $fso.GetFile($fsi.FullName).ShortPath
+
+            }
+        }
+        return $result
+    }
+}
+
 function Settle-Path
 {
     param ([string]$path)
@@ -30,11 +64,11 @@ function Join-EnvPath
 {
     param ([string]$first, [string]$second)
     if ($first -ne "" -and $second -ne "") {
-        return "$($first)${pathsep}$(Settle-Path $second)"
+        return "$($first)${pathsep}$($second)"
     } elseif ($first -ne "") {
-        return $(Settle-Path $first)
+        return $($first)
     } elseif ($second -ne "") {
-        return $(Settle-Path $second)
+        return $($second)
     }
 }
 
@@ -42,17 +76,14 @@ function Push-EnvPath
 {
     param([Array]$Paths)
     $local:dstPath = [System.Collections.ArrayList]::new()
-    foreach ($path in $paths.Split($pathsep))
-    {
-        $local:settled = $(Settle-Path $path)
-        if (-not $Env:PATH.Contains($settled))
-        {
-            [void]$dstPath.Add($settled)
-        }
-    }
-    if ($dstPath.Count -ne 0) {
-        $Env:Path = $(Join-EnvPath $($dstPath.ToArray() -join $pathsep) $Env:PATH)
-    }
+    $paths -split $pathsep | `
+        % { Settle-Path $_ } | `
+        ? { -not $Env:PATH.Contains($settled) } | `
+        % { [void]$dstPath.Add($(Get-ShortPath $_)) }
+    $Env:PATH -split $pathsep | ` 
+        % { Settle-Path $_ } | `
+        % { [void]$dstPath.Add($(Get-ShortPath $_)) }
+    $Env:Path = $($dstPath.ToArray() -join $pathsep)
 }
 
 Remove-Item -ErrorAction SilentlyContinue Alias:vi
@@ -64,8 +95,9 @@ if ([Environment]::GetEnvironmentVariable('ConEmuTask') -ne $null -And `
     return
 }
 
-function Import-ModuleEx ($name)
+function Import-ModuleEx
 {
+    param([string]$name)
     if ($(Get-Module -ErrorAction Ignore $name) -eq $null)
     {
         Import-Module -Name $name
@@ -147,3 +179,9 @@ Set-Alias -name vi -value "nvim${binSuffix}"
 Set-Alias -name vim -value "nvim${binSuffix}"
 
 Set-Alias -Name grep -Value Select-String
+
+ri -Path Function:Get-ShortPath
+ri -Path Function:Settle-Path
+ri -Path Function:Join-EnvPath
+ri -Path Function:Push-EnvPath
+ri -Path Function:Import-ModuleEx
