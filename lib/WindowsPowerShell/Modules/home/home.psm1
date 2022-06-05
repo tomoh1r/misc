@@ -89,19 +89,11 @@ Function env(){
     Process {Get-ChildItem ENV:}
 }
 
-Function which(){
-    Param([string]$name)
-
-    Process
-    {
-        $cmd = Get-Command $name
-        $def = $cmd.Definition
-        if($cmd.CommandType -ne 'Alias'){
-            Write-Host $def
-        }else{
-            Write-Host "(Alias) $def"
-        }
-    }
+function which() {
+    param([string]$private:name)
+    $private:cmd = $(Get-Command $name)
+    $private:prefix = $($cmd.CommandType -eq 'Alias' ? "(Alias) " : "")
+    return "${prefix}$($cmd.Definition)"
 }
 
 Remove-Item Alias:touch -ErrorAction SilentlyContinue
