@@ -21,7 +21,9 @@
   when: ansible_os_family == "RedHat" and ansible_distribution_version|int < 8
   become: yes
   package:
-    name: epel-release
+    name:
+      - epel-release
+      - epel-next-release
     state: present
 
 - name: (RedHat cor) install the 'Development tools' package group
