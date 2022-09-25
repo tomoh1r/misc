@@ -1,5 +1,8 @@
 #!/bin/bash
+PROG=$(basename "$0")
+_dir=$(dirname "$0")
+
 tmp=`mktemp`
-sudo /usr/local/bin/kind get kubeconfig > "${tmp}"
+"${_dir}/sudo-kind.sh" get kubeconfig > "${tmp}"
 KUBECONFIG="${tmp}:${HOME}/.kube/config" kubectl config view --flatten > "${HOME}/.kube/config"
 rm "${tmp}"
