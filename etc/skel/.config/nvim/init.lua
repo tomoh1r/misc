@@ -15,6 +15,12 @@ api.nvim_command [[source ~\Program\misc\etc\vim\filetypes]]
 api.nvim_command [[source ~\Program\misc\etc\vim\basis]]
 
 vim.bo.syntax = 'on'
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+vim.opt.termguicolors = true
+api.nvim_command [[nmap <silent> <C-O> :NvimTreeToggle<CR>]]
+require("nvim-tree").setup()
 vim.o.background = 'dark'
 vim.g.solarized_termcolors = 256
 api.nvim_command [[colorscheme darkblue]]
+api.nvim_command [[set mouse=]]

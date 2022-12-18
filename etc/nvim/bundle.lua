@@ -13,8 +13,10 @@ vim.fn['dein#add']('Shougo/deoplete.nvim')
 --  vim.fn['dein#add']('roxma/vim-hug-neovim-rpc')
 --end
 
--- NERD tree
-vim.fn['dein#add']('preservim/nerdtree')
+-- filer
+vim.fn['dein#add']('nvim-tree/nvim-web-devicons')
+vim.fn['dein#add']('nvim-tree/nvim-tree.lua')
+
 vim.fn['dein#add']('preservim/nerdcommenter')
 
 -- Python

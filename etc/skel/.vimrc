@@ -54,6 +54,8 @@ if has('gui_running')
     endif
 endif
 
+se mouse=
+
 " user settings
 
 "let g:flake8_cmd="/home/tomo/Documents/misc/bin/flake8"
