@@ -6,15 +6,21 @@
 [core]
 	attributesfile = ~/.local/misc/etc/git/gitattributes
 	excludesfile = ~/.local/misc/etc/git/gitignore
+	;editor = ~/AppData/Local/Programs/Neovim/bin/nvim.exe
+	;sshCommand = "c:/PROGRA~1/PuTTY/plink.exe"
+	;sshCommand = "c:/PROGRA~1/Git/usr/bin/ssh.exe"
+	;sshCommand = "c:/Windows/System32/OpenSSH/ssh.exe"
 
 [user]
 	name = Tomohiro NAKAMURA
 	email = quickness.net@gmail.com
 
-[http]
-	; windows: /ssl/certs/ca-bundle.crt
-	; linux: /etc/ssl/certs/ca-bundle.crt
-	sslCAinfo = /ssl/certs/ca-bundle.crt
+;[http]
+	; windows:
+	;sslBackend = schannel
+	; linux:
+	;sslCAinfo =  /etc/ssl/certs/ca-bundle.crt
+	;sslBackend = openssl
 
 [sendemail]
 	; windows:    /bin/msmtp.exe
@@ -24,6 +30,3 @@
 [credential]
 	helper = store --file ~/.git-credentials
 	helper = cache --timeout=300
-
-[advice]
-	detachedHead = false

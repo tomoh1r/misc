@@ -5,12 +5,15 @@
 	autocrlf = false
 	pager =
 	abbrev = 12
+	autocrlf = false
+	fsmonitor = true
 
 [advice]
 	detachedHead = false
 
 [color]
-	ui = true
+	diff = always
+	ui = auto
 
 [status]
 	short = true
