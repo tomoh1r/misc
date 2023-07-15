@@ -19,8 +19,13 @@ vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 vim.opt.termguicolors = true
 api.nvim_command [[nmap <silent> <C-O> :NvimTreeToggle<CR>]]
-require("nvim-tree").setup()
 vim.o.background = 'dark'
 vim.g.solarized_termcolors = 256
 api.nvim_command [[colorscheme darkblue]]
 api.nvim_command [[set mouse=]]
+
+require("nvim-tree").setup({
+    filters = {
+        custom = { '^.git$', 'venv', '^node_modules$', '^__pycache__$' }
+    }
+})
