@@ -48,7 +48,6 @@ au FileType htmldjango call SettingForHTML()
 au FileType xml call SettingForHTML()
 au FileType xspf call SettingForHTML()
 au FileType javascript call SettingForHTML()
-au FileType javascript :compiler gjslint
 au FileType css call SettingForHTML()
 au FileType rst call SettingForRST()
 au FileType coffee call SettingForHTML()
