@@ -1,35 +1,34 @@
 # vim:ft=sh noet:
 
-if [ -z "$_USER_INITED" ] ; then
-	export EDITOR=vim
-	export PAGER=less
-	export LESS='-R'
-	export MY_GIT_DIFF_ENC=UTF-8
-	export HGENCODING=utf-8
-	export SYSTEMD_PAGER=
+export EDITOR=vim
+export PAGER=less
+export LESS='-R'
+export MY_GIT_DIFF_ENC=UTF-8
+export HGENCODING=utf-8
+export SYSTEMD_PAGER=
 
-	# export HISTIGNORE="fg*:bg*:history*:cd*"
-	export HISTCONTROL=ignoreboth
-	export HISTSIZE=20000
-	export PROMPT_COMMAND="history -a"
+# export HISTIGNORE="fg*:bg*:history*:cd*"
+export HISTCONTROL=ignoreboth
+export HISTSIZE=20000
+export PROMPT_COMMAND="history -a"
 
-	export PIPX_HOME=~/.local/var/pipx
-	export PIPX_BIN_DIR=~/.local/bin
+export PIPX_HOME=~/.local/var/pipx
+export PIPX_BIN_DIR=~/.local/bin
 
-	PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
-	PATH=~/misc-work/bin:~/misc/bin:~/.local/bin:~/.local/sbin:$PATH
-	export PATH
-
-	export _USER_INITED=1
+if [ -z "$_OLDPATH" ]; then
+	export _OLDPATH=$PATH
 fi
+PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
+PATH=~/misc-work/bin:~/misc/bin:~/.local/bin:~/.local/sbin:$PATH
+export PATH="$PATH:$_OLDPATH"
 
-#. ~/.bash_aliases
+. ~/.bash_aliases
 
 ### 作業ブランチの表示
 #. ~/misc/share/git/git-completion.bash
 #. ~/misc/share/git/git-prompt.sh
 #PS1="\$(git_branch)\$(hg_branch)[@\h \W]\$ "
-#PS1="\$(git_branch)[@\h \W]\r\n\$ "
+PS1="[@\h \W]\r\n\$ "
 
 ### vim
 unset VIM

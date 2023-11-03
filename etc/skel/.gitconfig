@@ -1,18 +1,18 @@
 # vim:ft=gitconfig noet:
 
 [include]
-	path = ~/.local/misc/etc/git/gitconfig
+	path = ~/.misc/etc/git/gitconfig
 
 [core]
-	attributesfile = ~/.local/misc/etc/git/gitattributes
-	excludesfile = ~/.local/misc/etc/git/gitignore
+	attributesfile = ~/.misc/etc/git/gitattributes
+	excludesfile = ~/.misc/etc/git/gitignore
 	;editor = ~/AppData/Local/Programs/Neovim/bin/nvim.exe
 	;sshCommand = "c:/PROGRA~1/PuTTY/plink.exe"
 	;sshCommand = "c:/PROGRA~1/Git/usr/bin/ssh.exe"
 	;sshCommand = "c:/Windows/System32/OpenSSH/ssh.exe"
 
 [user]
-	name = Tomohiro NAKAMURA
+	name = NAKAMURA, Tomohiro
 	email = quickness.net@gmail.com
 
 ;[http]
