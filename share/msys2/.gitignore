@@ -1,0 +1,4 @@
+luajit/src/
+luajit/luajit/
+luajit/luajit-?.?.?-?-x86_64*
+!luajit/luajit-?.?.?-?-x86_64.pkg.tar.zst
