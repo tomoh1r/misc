@@ -7,12 +7,13 @@ local api = vim.api
 -- basically, I code bash scripts
 vim.g.is_bash = 1
 
---vim.g.python3_host_prog = vim.env.HOME .. ""
+api.nvim_command [[set packpath+=~\Program\misc\share\vim\rtp]]
+--vim.g.python3_host_prog = vim.env.HOME .. "\\Program\\lib\\pyvenv-neovim\\Scripts\\python.exe"
 
-api.nvim_command [[luafile ~\Program\misc\etc\nvim\bundle.lua]]
+api.nvim_command [[source ~\Program\misc\etc\vim\bundle]]
+api.nvim_command [[source ~\Program\misc\etc\vim\basis]]
 api.nvim_command [[source ~\Program\misc\etc\vim\encodings]]
 api.nvim_command [[source ~\Program\misc\etc\vim\filetypes]]
-api.nvim_command [[source ~\Program\misc\etc\vim\basis]]
 
 vim.bo.syntax = 'on'
 vim.g.loaded_netrw = 1
