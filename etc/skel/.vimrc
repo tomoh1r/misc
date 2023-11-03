@@ -1,6 +1,7 @@
 " vim: ft=vim:
 
-let s:dotmisc = expand('~/.local/misc/etc/vim/')
+set packpath+=~/.misc/share/vim/rtp
+let s:dotmisc = expand('~/.misc/etc/vim/')
 
 " 基本的に bash のスクリプトを操作するので
 let g:is_bash = 1

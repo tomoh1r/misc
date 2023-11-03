@@ -1,75 +1,59 @@
 " vim:se ft=vim:
 
-" Note: Skip initialization for vim-tiny or vim-small.
-if !1 | finish | endif
+packadd vim-jetpack
+call jetpack#begin()
+Jetpack 'tani/vim-jetpack', {'opt': 1} "bootstrap
 
-if has('vim_starting')
-    set nocompatible  " Be iMproved
-
-    " Required:
-    set runtimepath+=~/.vim/bundle/neobundle.vim/
+if has('nvim')
+    Jetpack 'nvim-tree/nvim-web-devicons'
+    Jetpack 'nvim-tree/nvim-tree.lua'
+else
+    Jetpack 'scrooloose/nerdtree'
+    Jetpack 'scrooloose/nerdcommenter'
 endif
 
-" Required:
-call neobundle#begin(expand('~/.vim/bundle/'))
-
-" Let NeoBundle manage NeoBundle
-" Required:
-NeoBundleFetch 'Shougo/neobundle.vim'
-
-" Let NeoBundle manage NeoBundle
-
-" NERD tree
-NeoBundle 'scrooloose/nerdtree'
-NeoBundle 'scrooloose/nerdcommenter'
-
 " indent
-NeoBundle 'nathanaelkane/vim-indent-guides'
+Jetpack 'nathanaelkane/vim-indent-guides'
 
-" completion
-NeoBundle 'Shougo/neocomplete.vim'
-NeoBundle 'haya14busa/vim-migemo'
+" text/completion
+Jetpack 'lambdalisue/kensaku.vim'
+Jetpack 'rbtnn/vim-ambiwidth'
+Jetpack 'sheerun/vim-polyglot'
 
 " reStructuredText
-"NeoBundleLazy 'Rykka/riv.vim', {'autoload': {'filetypes': ['rst']}}
+Jetpack 'Rykka/riv.vim', {'for': ['rst']}
 
 " Python
-NeoBundleLazy 'nvie/vim-flake8', {'autoload': {'filetypes': ['python']}}
-NeoBundleLazy 'keitheis/vim-plim', {'autoload': {'filetypes': ['plim']}}
+Jetpack 'nvie/vim-flake8', {'for':  ['python']}
+Jetpack 'keitheis/vim-plim', {'for':  ['plim']}
 
 " JavaScript
-NeoBundleLazy 'jelera/vim-javascript-syntax', {'autoload': {'filetypes': ['javascript']}}
-NeoBundleLazy 'jason0x43/vim-js-indent', {'autoload': {'filetypes': ['javascript', 'typescript']}}
+Jetpack 'jelera/vim-javascript-syntax', {'for':  ['javascript']}
+Jetpack 'jason0x43/vim-js-indent', {'for':  ['javascript', 'typescript']}
 
 " Jinja2
-NeoBundleLazy 'Glench/Vim-Jinja2-Syntax', {'autoload': {'filetypes': ['jinja']}}
+Jetpack 'Glench/Vim-Jinja2-Syntax', {'for':  ['jinja']}
 
 " TypeScript
-NeoBundleLazy 'leafgarland/typescript-vim', {'autoload': {'filetypes': ['typescript']}}
+Jetpack 'leafgarland/typescript-vim', {'for':  ['typescript']}
 
 " CoffeeScript
-NeoBundleLazy 'kchmck/vim-coffee-script', {'autoload': {'filetypes': ['coffee']}}
+Jetpack 'kchmck/vim-coffee-script', {'for':  ['coffee']}
 
 " Erlang
-NeoBundleLazy 'oscarh/vimerl', {'autoload': {'filetypes': ['erlang']}}
+Jetpack 'oscarh/vimerl', {'for':  ['erlang']}
 
 " ps1 / PowerShell
-NeoBundleLazy 'PProvost/vim-ps1', {'autoload': {'filetypes': ['ps1']}}
+Jetpack 'PProvost/vim-ps1', {'for':  ['ps1']}
 
 " Golang
-NeoBundleLazy 'fatih/vim-go', {'autoload': {'filetypes': ['go']}}
+Jetpack 'fatih/vim-go', {'for':  ['go']}
 
 " Kotlin
-NeoBundleLazy 'udalov/kotlin-vim', {'autoload': {'filetypes': ['kotlin']}}
+Jetpack 'udalov/kotlin-vim', {'for':  ['kotlin']}
 
 " colo
-NeoBundle 'https://github.com/tomasr/molokai'
+Jetpack 'tomasr/molokai'
+Jetpack 'altercation/vim-colors-solarized'
 
-" Required:
-call neobundle#end()
-filetype plugin indent on
-syntax enable
-
-" If there are uninstalled bundles found on startup,
-" this will conveniently prompt you to install them.
-NeoBundleCheck
+call jetpack#end()
