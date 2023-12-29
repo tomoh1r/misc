@@ -4,7 +4,7 @@ import shutil
 import tempfile
 from pathlib import Path
 
-from . import helper
+from .helper import get_settings, download_file, expand_file
 
 # TODO: sudo で動いていなければ落とすようにする
 # TODO: download
@@ -18,9 +18,9 @@ COMMANDS = []
 
 
 def main(args):
-    url = DL_SRC_MAPPING[args.version]["url"]
+    src_url = DL_SRC_MAPPING[args.version]["url"]
     name = DL_SRC_MAPPING[args.version]["name"]
-    print(url)
+    print(src_url)
     print(name)
     return
 
@@ -29,10 +29,10 @@ def main(args):
         pass
 
     with tempfile.TemporaryDirectory() as tmpd:
-        fname = download(helper.get_settings("jdk bin url", "8.0"), tmpd)
+        fpath = download_file(get_settings(src_url, tmpd)
         if install_dpath.exists():
             shutil.rmtree(install_dpath)
-        expand(fname, install_dpath, children=[])
+        expand_file(fpath, install_dpath, children=[])
 
     """
 	echo "Download archive, and install binary to ${_ldst}"
