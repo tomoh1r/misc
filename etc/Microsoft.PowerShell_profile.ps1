@@ -56,7 +56,12 @@ function Get-ShortPath
 function Settle-Path
 {
     param ([string]$path)
-    $splitted = $path -replace '^~', $HOME
+    # 末尾 ; とかで空白文字列が渡ってきた場合返す
+    if([System.String]::IsNullOrEmpty($path.Trim())) {
+      return $path
+    }
+
+    $splitted = ($path.Trim()) -replace '^~', $HOME
     return Split-Path -Path $(Join-Path -Path $splitted -Child dmy) -Parent
 }
 
