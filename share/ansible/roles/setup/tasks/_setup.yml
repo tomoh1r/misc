@@ -20,7 +20,7 @@
 - name: (RedHat cor) install epel-release
   when: ansible_os_family == "RedHat" and ansible_distribution_version|int < 8
   become: yes
-  package:
+  dnf:
     name:
       - epel-release
       - epel-next-release
@@ -29,8 +29,8 @@
 - name: (RedHat cor) install the 'Development tools' package group
   when: ansible_os_family == "RedHat"
   become: yes
-  package:
-    name: "@Development tools"
+  dnf:
+    name: "@development-tools"
     state: present
 
 - name: (Debian cor) install build-essential
