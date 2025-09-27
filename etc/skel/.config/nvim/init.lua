@@ -9,6 +9,8 @@ vim.g.is_bash = 1
 
 api.nvim_command [[set packpath+=~\Program\misc\share\vim]]
 --vim.g.python3_host_prog = vim.env.HOME .. "\\Program\\lib\\pyvenv-neovim\\Scripts\\python.exe"
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_ruby_provider = 0
 
 api.nvim_command [[source ~\Program\misc\etc\vim\bundle]]
 api.nvim_command [[source ~\Program\misc\etc\vim\basis]]
