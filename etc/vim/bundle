@@ -1,5 +1,9 @@
 " vim:se ft=vim:
 
+" vim にて別のプラグインを利用するため、
+" また、nvim にて sheerun/vim-polyglot で CSV はエラーとなるため除外する
+let g:polyglot_disabled = ['csv']
+
 packadd vim-jetpack
 call jetpack#begin()
 Jetpack 'tani/vim-jetpack', {'opt': 1} "bootstrap
@@ -10,6 +14,7 @@ if has('nvim')
 else
     Jetpack 'scrooloose/nerdtree'
     Jetpack 'scrooloose/nerdcommenter'
+    Jetpack 'chrisbra/csv.vim', {'for':  ['csv']}
 endif
 
 " indent
