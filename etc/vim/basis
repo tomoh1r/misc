@@ -1,4 +1,9 @@
 " vim:se ft=vim:
+
+" 有効 True Colorでのシンタックスハイライト
+" XXX: 使用されるのは guifg と guibg のみ、gui は使用されず cterm の指定が有効
+set termguicolors
+
 " 文字色／背景色
 colo slate
 
