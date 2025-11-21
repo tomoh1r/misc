@@ -14,6 +14,8 @@ if has('nvim')
 else
     Jetpack 'scrooloose/nerdtree'
     Jetpack 'scrooloose/nerdcommenter'
+    Jetpack 'ryanoasis/vim-devicons'
+    Jetpack 'vim-nerdtree-syntax-highlight'
     Jetpack 'chrisbra/csv.vim', {'for':  ['csv']}
 endif
 
