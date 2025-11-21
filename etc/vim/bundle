@@ -18,6 +18,7 @@ else
     Jetpack 'vim-nerdtree-syntax-highlight'
     Jetpack 'chrisbra/csv.vim', {'for':  ['csv']}
 endif
+Jetpack 'tomasr/molokai'
 
 " indent
 Jetpack 'nathanaelkane/vim-indent-guides'
@@ -58,9 +59,5 @@ Jetpack 'fatih/vim-go', {'for':  ['go']}
 
 " Kotlin
 Jetpack 'udalov/kotlin-vim', {'for':  ['kotlin']}
-
-" colo
-Jetpack 'tomasr/molokai'
-Jetpack 'altercation/vim-colors-solarized'
 
 call jetpack#end()
