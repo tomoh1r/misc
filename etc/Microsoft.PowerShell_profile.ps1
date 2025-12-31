@@ -159,6 +159,7 @@ function Import-ModuleEx
         }
     }
     $fp.Close()
+    si -Path "Env:PATH" -Value (gi -Path Env:PATH).Value.Trim(";")
 }
 
 # ### module ###
