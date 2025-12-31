@@ -36,8 +36,8 @@ Function Get-GitBranch(){
         }
 
         git branch 2>$null |
-            ?{-not [System.String]::IsNullOrEmpty($_.Split()[0])} |
-            %{$bn = $_.Split()[1]
+            ? {-not [System.String]::IsNullOrEmpty($_.Split()[0])} |
+            % {$bn = $_.Split()[1]
                 Write-Output "(git:$bn) " }
     }
 }
@@ -92,8 +92,11 @@ Function env(){
 function which() {
     param([string]$private:name)
     $private:cmd = $(Get-Command $name)
-    $private:prefix = $($cmd.CommandType -eq 'Alias' ? "(Alias) " : "")
-    return "${prefix}$($cmd.Definition)"
+    if ($cmd.CommandType -eq 'Alias') {
+        return "(Alias) $($cmd.Definition)"
+    } else {
+        return "$($cmd.Definition)"
+    }
 }
 
 Remove-Item Alias:touch -ErrorAction SilentlyContinue

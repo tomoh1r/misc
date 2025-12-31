@@ -22,31 +22,35 @@ $script:dirsep = [IO.Path]::DirectorySeparatorChar
 function Get-ShortPath
 {
     param([string]$name)
-    begin { $local:fso = New-Object -ComObject Scripting.FileSystemObject }
+    begin { $private:fso = New-Object -ComObject Scripting.FileSystemObject }
     process
     {
-        $local:result = $null
+        $private:result = $null
         foreach ($path in $name.Split($dirsep))
         {
             if ($result -eq $null)
             {
-                $local:result = $path
+                $private:result = $path
+                continue
+            }
+
+            $private:joined = $(Join-Path $result $path)
+            try {
+                $private:fsi = $(Get-Item $joined -ErrorAction Stop)
+            }
+            catch
+            {
+                $private:result = $joined
+                continue
+            }
+
+            if ($fsi.psiscontainer)
+            {
+                $private:result = $fso.GetFolder($fsi.FullName).ShortPath
             }
             else
             {
-                $local:joined = $(Join-Path -Path $result -Child $path)
-                try {
-                    $local:fsi = $(Get-Item $joined -ErrorAction Stop)
-                }
-                catch
-                {
-                    $local:result = $joined
-                    continue
-                }
-                $local:result = $fsi.psiscontainer ?
-                   $fso.GetFolder($fsi.FullName).ShortPath :
-                   $fso.GetFile($fsi.FullName).ShortPath
-
+                $private:result = $fso.GetFile($fsi.FullName).ShortPath
             }
         }
         return $result
@@ -80,7 +84,7 @@ function Join-EnvPath
 function Push-EnvPath
 {
     param([Array]$Paths)
-    $local:dstPath = [System.Collections.ArrayList]::new()
+    $private:dstPath = [System.Collections.ArrayList]::new()
     $paths -split $pathsep | `
         % { Settle-Path $_ } | `
         ? { -not $Env:PATH.Contains($settled) } | `
@@ -159,9 +163,9 @@ function Import-ModuleEx
 
 # ### module ###
 
-$Env:PSModulePath = Join-EnvPath `
-    $(Join-Path $miscPath lib | Join-Path -ChildPath WindowsPowerShell | Join-Path -ChildPath Modules) `
-    $Env:PSModulePath
+$private:parent = Split-Path $PSScriptRoot -Parent
+$private:mymodpath = $(Join-Path $(Join-Path $(Join-Path $parent "lib") "WindowsPowerShell") "Modules")
+$Env:PSModulePath = Join-EnvPath $mymodpath $Env:PSModulePath
 
 Import-ModuleEx -Name home
 #Import-ModuleEx -Name posh-git
@@ -170,22 +174,22 @@ Set-PSReadlineOption -EditMode Emacs
 Set-PSReadlineOption -BellStyle None
 Set-Alias cd home\Set-LocationExHome -Force -Scope Global -Option AllScope -Description "home alias"
 
-if ($IsWindows)
-{
+#if ($IsWindows)
+#{
     #Import-ModuleEx -Name Pscx
     #Import-ModuleEx -Name PSWindowsUpdate
-}
+#}
 
 # ### common ###
 
-$local:binSuffix = ""
-if ($IsWindows) { $local:binSuffix = ".exe"; }
-Set-Alias -name vi -value "nvim${binSuffix}"
-Set-Alias -name vim -value "nvim${binSuffix}"
+#$private:binSuffix = ""
+#if ($IsWindows) { $private:binSuffix = ".exe"; }
+#Set-Alias -name vi -value "nvim${binSuffix}"
+#Set-Alias -name vim -value "nvim${binSuffix}"
 
-Set-Alias -Name grep -Value Select-String
+#Set-Alias -Name grep -Value Select-String
 
-ri -Path Function:Get-ShortPath
+#ri -Path Function:Get-ShortPath
 ri -Path Function:Settle-Path
 ri -Path Function:Join-EnvPath
 ri -Path Function:Push-EnvPath

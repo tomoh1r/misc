@@ -1,3 +1,5 @@
+if (-not $(chcp).Contains(' 65001')) { chcp 65001; }
+
 $script:miscPath = $(Join-Path "$HOME/.local" "misc")
 . $(Join-Path $miscPath "etc/Microsoft.PowerShell_profile.ps1")
 
