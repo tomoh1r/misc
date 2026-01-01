@@ -1,3 +1,4 @@
+﻿# ユーザースコープの環境変数があれば削除する。
 Function Set-NullEnv {
     Param ( $Name )
     Process {
@@ -7,6 +8,7 @@ Function Set-NullEnv {
     }
 }
 
+# 指定パスから親を辿り、対象ディレクトリの有無を確認する。
 Function Test-ExistsParentPath(){
     Param(
         $path,
@@ -28,6 +30,7 @@ Function Test-ExistsParentPath(){
     }
 }
 
+# Git リポジトリ内なら現在のブランチ名を返す。
 Function Get-GitBranch(){
     Process
     {
@@ -42,6 +45,7 @@ Function Get-GitBranch(){
     }
 }
 
+# Mercurial リポジトリ内なら現在のブランチ名を返す。
 Function Get-HgBranch(){
     Process
     {
@@ -53,8 +57,7 @@ Function Get-HgBranch(){
     }
 }
 
-# return current directory
-# with $ENV:HOME to ~
+# 現在のディレクトリを返し、HOME 配下は ~ に短縮する。
 Function Get-Pwd(){
     $path = $(Get-Location).Path
     if($path.IndexOf($ENV:HOME) -eq 0){
@@ -63,6 +66,7 @@ Function Get-Pwd(){
     return $path
 }
 
+# コマンド一覧をソース/種別/名前で整列して返す。
 Function Get-SortedCommand() {
     Process
     {
@@ -70,6 +74,7 @@ Function Get-SortedCommand() {
     }
 }
 
+# 引数なしなら HOME へ移動する cd の拡張。
 Function Set-LocationExHome() {
     Param(
         [Parameter(Mandatory = $false, Position = 0)]
@@ -85,10 +90,12 @@ Function Set-LocationExHome() {
     }
 }
 
+# 環境変数一覧を表示する簡易ラッパー。
 Function env(){
     Process {Get-ChildItem ENV:}
 }
 
+# コマンドの実体パスまたはエイリアス先を表示する。
 function which() {
     param([string]$private:name)
     $private:cmd = $(Get-Command $name)
@@ -100,6 +107,7 @@ function which() {
 }
 
 Remove-Item Alias:touch -ErrorAction SilentlyContinue
+# ファイル作成または更新日時の変更を行う。
 Function touch(){
     Param([string]$filename)
 
@@ -113,3 +121,5 @@ Function touch(){
 }
 
 Export-ModuleMember -Function *
+
+
