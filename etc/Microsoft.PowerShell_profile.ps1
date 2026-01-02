@@ -1,13 +1,13 @@
 if ($IsWindows -eq $null)
 {
-    $global:IsWindows = $false
+    $private:IsWindows = $false
     if ($PSVersionTable.Platform -eq "Win32NT")
     {
-        $global:IsWindows = $true
+        $private:IsWindows = $true
     }
     elseif ($Env:OS -eq "Windows_NT")
     {
-        $global:IsWindows = $true
+        $private:IsWindows = $true
     }
 }
 
@@ -34,9 +34,9 @@ function Get-ShortPath
                 continue
             }
 
-            $private:joined = $(Join-Path $result $path)
+            $private:joined = Join-Path $result $path
             try {
-                $private:fsi = $(Get-Item $joined -ErrorAction Stop)
+                $private:fsi = Get-Item $joined -ErrorAction Stop
             }
             catch
             {
@@ -66,7 +66,7 @@ function Settle-Path
     }
 
     $splitted = ($path.Trim()) -replace '^~', $HOME
-    return Split-Path -Path $(Join-Path -Path $splitted -Child dmy) -Parent
+    return Split-Path -Path (Join-Path -Path $splitted -Child dmy) -Parent
 }
 
 function Join-EnvPath
@@ -92,7 +92,7 @@ function Push-EnvPath
     $Env:PATH -split $pathsep | ` 
         % { Settle-Path $_ } | `
         % { [void]$dstPath.Add($(Get-ShortPath $_)) }
-    $Env:Path = $($dstPath.ToArray() -join $pathsep)
+    $Env:Path = $dstPath.ToArray() -join $pathsep
 }
 
 Remove-Item -ErrorAction SilentlyContinue Alias:vi
@@ -107,8 +107,7 @@ if ([Environment]::GetEnvironmentVariable('ConEmuTask') -ne $null -And `
 function Import-ModuleEx
 {
     param([string]$name)
-    if ($(Get-Module -ErrorAction Ignore $name) -eq $null)
-    {
+    if (-not (Get-Module -Name $name -ErrorAction Ignore)) {
         Import-Module -Name $name
     }
 }
@@ -165,7 +164,7 @@ function Import-ModuleEx
 # ### module ###
 
 $private:parent = Split-Path $PSScriptRoot -Parent
-$private:mymodpath = $(Join-Path $(Join-Path $(Join-Path $parent "lib") "WindowsPowerShell") "Modules")
+$private:mymodpath = Join-Path (Join-Path (Join-Path $parent "lib") "WindowsPowerShell") "Modules"
 $Env:PSModulePath = Join-EnvPath $mymodpath $Env:PSModulePath
 
 Import-ModuleEx -Name home

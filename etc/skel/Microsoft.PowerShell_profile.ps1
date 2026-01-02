@@ -1,23 +1,7 @@
 if (-not $(chcp).Contains(' 65001')) { chcp 65001; }
 
-$script:miscPath = $(Join-Path "$HOME/.local" "misc")
-. $(Join-Path $miscPath "etc/Microsoft.PowerShell_profile.ps1")
-
-# ### noprofile ###
-$_vimDir = "vim-kaoriya-develop"
-if ([Environment]::GetEnvironmentVariable('ConEmuTask') -ne $null -And `
-        $Env:ConEmuTask.ToLower().Contains('noprofile')) {
-    Push-EnvPath $(Join-Path "$HOME/Documents/Program" $_vimDir)
-
-    [ScriptBlock]$Prompt = {
-        $global:LASTEXITCODE = $LASTEXITCODE
-        return "PS $(Get-Location)> "
-    }
-
-    Set-Item -Path Function:\Prompt -Value $Prompt -Options ReadOnly
-
-    exit 0
-}
+$private:miscPath = $(Join-Path (Join-Path $HOME ".local") "misc")
+. $(Join-Path (Join-Path $miscPath "etc") "Microsoft.PowerShell_profile.ps1")
 
 # plink
 #Set-Alias -name plink -value "<plink path>"
