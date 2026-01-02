@@ -1,4 +1,30 @@
-﻿# ユーザースコープの環境変数があれば削除する。
+﻿# -- vars --
+
+$script:IsWindows = $null
+if ($IsWindows -eq $null)
+{
+    $script:IsWindows = $false
+    if ($PSVersionTable.Platform -eq "Win32NT")
+    {
+        $script:IsWindows = $true
+    }
+    elseif ($Env:OS -eq "Windows_NT")
+    {
+        $script:IsWindows = $true
+    }
+}
+
+$script:pathsep = ":"
+if ($IsWindows) { $script:pathsep = ";"; }
+$script:dirsep = [IO.Path]::DirectorySeparatorChar
+
+function Test-Windows { return $IsWindows; }
+function Get-PathSep { return $pathsep; }
+function Get-DirSep { return $dirsep; }
+
+# -- Env or Env:PATH --
+
+# ユーザースコープの環境変数があれば削除する。
 Function Set-NullEnv {
     Param ( $Name )
     Process {
@@ -7,6 +33,123 @@ Function Set-NullEnv {
         }
     }
 }
+
+function Get-ShortPath
+{
+    param([string]$name)
+    begin {
+        $private:fso = New-Object -ComObject Scripting.FileSystemObject
+        $private:dirsep = Get-DirSep
+    }
+    process
+    {
+        $private:result = $null
+        foreach ($path in $name.Split($dirsep))
+        {
+            if ($result -eq $null)
+            {
+                $private:result = $path
+                continue
+            }
+
+            $private:joined = Join-Path $result $path
+            try {
+                $private:fsi = Get-Item $joined -ErrorAction Stop
+            }
+            catch
+            {
+                $private:result = $joined
+                continue
+            }
+
+            if ($fsi.psiscontainer)
+            {
+                $private:result = $fso.GetFolder($fsi.FullName).ShortPath
+            }
+            else
+            {
+                $private:result = $fso.GetFile($fsi.FullName).ShortPath
+            }
+        }
+        return $result
+    }
+}
+
+function Resolve-HomePath
+{
+    param ([string]$path)
+    process
+    {
+        # 末尾 ; とかで空白文字列が渡ってきた場合返す
+        if([System.String]::IsNullOrEmpty($path.Trim())) {
+          return $path
+        }
+
+        $splitted = ($path.Trim()) -replace '^~', $HOME
+        return Split-Path -Path (Join-Path -Path $splitted -Child dmy) -Parent
+    }
+}
+
+function Join-EnvPath
+{
+    param ([string]$first, [string]$second)
+    begin { $private:pathsep = Get-PathSep }
+    process
+    {
+        if ($first -ne "" -and $second -ne "") {
+            $private:result = "$($first)${pathsep}$($second)"
+        } elseif ($first -ne "") {
+            $private:result = $first
+        } elseif ($second -ne "") {
+            $private:result = $second
+        }
+        return (Remove-EnvPathDuplicates $result)
+    }
+}
+
+function Push-EnvPath
+{
+    param([Array]$Paths)
+    begin { $private:pathsep = Get-PathSep }
+    process
+    {
+        $private:dstPath = [System.Collections.ArrayList]::new()
+        $paths -split $pathsep | `
+            % { Resolve-HomePath $_ } | `
+            ? { -not $Env:PATH.Contains($settled) } | `
+            % { [void]$dstPath.Add($(Get-ShortPath $_)) }
+        $Env:PATH -split $pathsep | ` 
+            % { Resolve-HomePath $_ } | `
+            % { [void]$dstPath.Add($(Get-ShortPath $_)) }
+        $Env:Path = Remove-EnvPathDuplicates ($dstPath.ToArray() -join $pathsep)
+    }
+}
+
+function Remove-EnvPathDuplicates
+{
+    param([string]$value = $Env:PATH)
+    begin { $private:pathsep = Get-PathSep }
+    process
+    {
+        $private:dstPath = [System.Collections.ArrayList]::new()
+        $private:seen = @{}
+        foreach ($raw in ($value -split $pathsep))
+        {
+            $settled = Resolve-HomePath $raw
+            if ([System.String]::IsNullOrEmpty($settled)) { continue }
+            $short = Get-ShortPath $settled
+            $keyLong = $settled.ToLowerInvariant()
+            $keyShort = $short.ToLowerInvariant()
+            if ($seen.ContainsKey($keyLong) -or $seen.ContainsKey($keyShort)) { continue }
+            $seen[$keyLong] = $true
+            $seen[$keyShort] = $true
+            [void]$dstPath.Add($raw.Trim())
+        }
+        return $dstPath.ToArray() -join $pathsep
+    }
+}
+
+# -- misc --
 
 # 指定パスから親を辿り、対象ディレクトリの有無を確認する。
 Function Test-ExistsParentPath(){
@@ -91,12 +234,10 @@ Function Set-LocationExHome() {
 }
 
 # 環境変数一覧を表示する簡易ラッパー。
-Function env(){
-    Process {Get-ChildItem ENV:}
-}
+Function Get-ChildItemEnv(){ Get-ChildItem ENV: }
 
 # コマンドの実体パスまたはエイリアス先を表示する。
-function which() {
+function Get-CommandPath() {
     param([string]$private:name)
     $private:cmd = $(Get-Command $name)
     if ($cmd.CommandType -eq 'Alias') {
@@ -106,9 +247,8 @@ function which() {
     }
 }
 
-Remove-Item Alias:touch -ErrorAction SilentlyContinue
 # ファイル作成または更新日時の変更を行う。
-Function touch(){
+Function New-SimpleItem(){
     Param([string]$filename)
 
     Process {
@@ -119,7 +259,3 @@ Function touch(){
         }
     }
 }
-
-Export-ModuleMember -Function *
-
-

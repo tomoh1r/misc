@@ -1,143 +1,17 @@
-if ($IsWindows -eq $null)
-{
-    $private:IsWindows = $false
-    if ($PSVersionTable.Platform -eq "Win32NT")
-    {
-        $private:IsWindows = $true
-    }
-    elseif ($Env:OS -eq "Windows_NT")
-    {
-        $private:IsWindows = $true
-    }
-}
-
-$OutputEncoding = [Text.Encoding]::Default
-$Env:LANG = "ja_JP.UTF-8"
-if ($IsWindows) { $Env:LANG = "ja_JP.CP932"; }
-
-$script:pathsep = ":"
-if ($IsWindows) { $script:pathsep = ";"; }
-$script:dirsep = [IO.Path]::DirectorySeparatorChar
-
-function Get-ShortPath
-{
-    param([string]$name)
-    begin { $private:fso = New-Object -ComObject Scripting.FileSystemObject }
-    process
-    {
-        $private:result = $null
-        foreach ($path in $name.Split($dirsep))
-        {
-            if ($result -eq $null)
-            {
-                $private:result = $path
-                continue
-            }
-
-            $private:joined = Join-Path $result $path
-            try {
-                $private:fsi = Get-Item $joined -ErrorAction Stop
-            }
-            catch
-            {
-                $private:result = $joined
-                continue
-            }
-
-            if ($fsi.psiscontainer)
-            {
-                $private:result = $fso.GetFolder($fsi.FullName).ShortPath
-            }
-            else
-            {
-                $private:result = $fso.GetFile($fsi.FullName).ShortPath
-            }
-        }
-        return $result
-    }
-}
-
-function Settle-Path
-{
-    param ([string]$path)
-    process
-    {
-        # 末尾 ; とかで空白文字列が渡ってきた場合返す
-        if([System.String]::IsNullOrEmpty($path.Trim())) {
-          return $path
-        }
-
-        $splitted = ($path.Trim()) -replace '^~', $HOME
-        return Split-Path -Path (Join-Path -Path $splitted -Child dmy) -Parent
-    }
-}
-
-function Join-EnvPath
-{
-    param ([string]$first, [string]$second)
-    process
-    {
-        if ($first -ne "" -and $second -ne "") {
-            $private:result = "$($first)${pathsep}$($second)"
-        } elseif ($first -ne "") {
-            $private:result = $first
-        } elseif ($second -ne "") {
-            $private:result = $second
-        }
-        return (Trim-EnvPathDups $result)
-    }
-}
-
-function Push-EnvPath
-{
-    param([Array]$Paths)
-    process
-    {
-        $private:dstPath = [System.Collections.ArrayList]::new()
-        $paths -split $pathsep | `
-            % { Settle-Path $_ } | `
-            ? { -not $Env:PATH.Contains($settled) } | `
-            % { [void]$dstPath.Add($(Get-ShortPath $_)) }
-        $Env:PATH -split $pathsep | ` 
-            % { Settle-Path $_ } | `
-            % { [void]$dstPath.Add($(Get-ShortPath $_)) }
-        $Env:Path = Trim-EnvPathDups ($dstPath.ToArray() -join $pathsep)
-    }
-}
-
-function Trim-EnvPathDups
-{
-    param([string]$value = $Env:PATH)
-    process
-    {
-        $private:dstPath = [System.Collections.ArrayList]::new()
-        $private:seen = @{}
-        foreach ($raw in ($value -split $pathsep))
-        {
-            $settled = Settle-Path $raw
-            if ([System.String]::IsNullOrEmpty($settled)) { continue }
-            $short = Get-ShortPath $settled
-            $keyLong = $settled.ToLowerInvariant()
-            $keyShort = $short.ToLowerInvariant()
-            if ($seen.ContainsKey($keyLong) -or $seen.ContainsKey($keyShort)) { continue }
-            $seen[$keyLong] = $true
-            $seen[$keyShort] = $true
-            [void]$dstPath.Add($raw.Trim())
-        }
-        return $dstPath.ToArray() -join $pathsep
-    }
-}
-
-Remove-Item -ErrorAction SilentlyContinue Alias:vi
-Remove-Item -ErrorAction SilentlyContinue Alias:vim
-
-# ### noprofile ###
+# ### cmder noprofile ###
 if ([Environment]::GetEnvironmentVariable('ConEmuTask') -ne $null -And `
         $Env:ConEmuTask.ToLower().Contains('noprofile')) {
     return
 }
 
-function Import-ModuleEx
+# ### module ###
+$private:pathsep = ":"
+if (($PSVersionTable.Platform -eq "Win32NT") -or ($Env:OS -eq "Windows_NT"))
+{
+    $private:pathsep = ";"
+}
+
+function private:Import-ModuleEx
 {
     param([string]$name)
     if (-not (Get-Module -Name $name -ErrorAction Ignore)) {
@@ -145,12 +19,22 @@ function Import-ModuleEx
     }
 }
 
+$private:parent = Split-Path $PSScriptRoot -Parent
+$private:mymodpath = Join-Path (Join-Path (Join-Path $parent "lib") "WindowsPowerShell") "Modules"
+$Env:PSModulePath = "$mymodpath${pathsep}$Env:PSModulePath"
+Import-ModuleEx -Name home
+$Env:PSModulePath = home\Remove-EnvPathDuplicates $Env:PSModulePath
+
+$OutputEncoding = [Text.Encoding]::Default
+$Env:LANG = "ja_JP.UTF-8"
+#if (home\Test-Windows) { $Env:LANG = "ja_JP.CP932"; }
+
 # ### init env ###
 
 & {
     if ($Env:PATH -eq $null -and $Env:Path -ne $null)
     {
-        $Env:PATH = Settle-Path $Env:Path
+        $Env:PATH = home\Resolve-HomePath $Env:Path
     }
 
     $fpath = Join-Path $HOME ".env"
@@ -159,8 +43,9 @@ function Import-ModuleEx
     }
 
     $fenc = [System.Text.Encoding]::GetEncoding(65001)
-    if ($IsWindows) { $fenc = [System.Text.Encoding]::GetEncoding(932); }
+    if (home\Test-Windows) { $fenc = [System.Text.Encoding]::GetEncoding(932); }
     $fp = New-Object System.IO.StreamReader($fpath, $fenc)
+    $private:pathsep = Get-PathSep
     while (($line = $fp.ReadLine()) -ne $null)
     {
         $splitted = $line.Trim().Split("=")
@@ -168,7 +53,7 @@ function Import-ModuleEx
             $key, $value = $splitted[0].Trim(), $splitted[1].Trim()
             if ($key -eq "" -or $value -eq "") { continue; }
 
-            if ($key -eq "PATH") { Push-EnvPath $value; }
+            if ($key -eq "PATH") { home\Push-EnvPath $value; }
             if ($key -eq "PATHEXT")
             {
                 foreach ($path in $value.Split($pathsep))
@@ -194,20 +79,20 @@ function Import-ModuleEx
     si -Path "Env:PATH" -Value (gi -Path Env:PATH).Value.Trim(";")
 }
 
-# ### module ###
-
-$private:parent = Split-Path $PSScriptRoot -Parent
-$private:mymodpath = Join-Path (Join-Path (Join-Path $parent "lib") "WindowsPowerShell") "Modules"
-$Env:PSModulePath = Join-EnvPath $mymodpath $Env:PSModulePath
-
-Import-ModuleEx -Name home
 #Import-ModuleEx -Name posh-git
 #Import-ModuleEx -Name PSReadLine
 Set-PSReadlineOption -EditMode Emacs
 Set-PSReadlineOption -BellStyle None
-Set-Alias cd home\Set-LocationExHome -Force -Scope Global -Option AllScope -Description "home alias"
 
-#if ($IsWindows)
+Remove-Item Alias:touch -ErrorAction SilentlyContinue
+Remove-Item Alias:vi -ErrorAction SilentlyContinue
+Remove-Item Alias:vim -ErrorAction SilentlyContinue
+#Set-Alias cd home\Set-LocationExHome -Force -Scope Global -Option AllScope -Description "home alias"
+Set-Alias env home\Get-ChildItemEnv -Force -Scope Global -Option AllScope -Description "home alias"
+Set-Alias which home\Get-CommandPath -Force -Scope Global -Option AllScope -Description "home alias"
+Set-Alias touch home\New-SimpleItem -Force -Scope Global -Option AllScope -Description "home alias"
+
+#if (home\Test-Windows)
 #{
     #Import-ModuleEx -Name Pscx
     #Import-ModuleEx -Name PSWindowsUpdate
@@ -216,14 +101,7 @@ Set-Alias cd home\Set-LocationExHome -Force -Scope Global -Option AllScope -Desc
 # ### common ###
 
 #$private:binSuffix = ""
-#if ($IsWindows) { $private:binSuffix = ".exe"; }
+#if (home\Test-Windows) { $private:binSuffix = ".exe"; }
 #Set-Alias -name vi -value "nvim${binSuffix}"
 #Set-Alias -name vim -value "nvim${binSuffix}"
-
 #Set-Alias -Name grep -Value Select-String
-
-#ri -Path Function:Get-ShortPath
-ri -Path Function:Settle-Path
-ri -Path Function:Join-EnvPath
-ri -Path Function:Push-EnvPath
-ri -Path Function:Import-ModuleEx
