@@ -5,7 +5,7 @@
 set termguicolors
 
 " 文字色／背景色
-colo slate
+"colo slate
 
 " ウィンドウ表示関係
 se number       " 行番号表示

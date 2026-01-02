@@ -100,10 +100,15 @@ function script:Initialize-PSReadLineOnce {
 Remove-Item Alias:touch -ErrorAction SilentlyContinue
 Remove-Item Alias:vi -ErrorAction SilentlyContinue
 Remove-Item Alias:vim -ErrorAction SilentlyContinue
-#Set-Alias cd home\Set-LocationExHome -Force -Scope Global -Option AllScope -Description "home alias"
-Set-Alias env home\Get-ChildItemEnv -Force -Scope Global -Option AllScope -Description "home alias"
-Set-Alias which home\Get-CommandPath -Force -Scope Global -Option AllScope -Description "home alias"
-Set-Alias touch home\New-SimpleItem -Force -Scope Global -Option AllScope -Description "home alias"
+Remove-Item Env:\GIT_EDITOR -ErrorAction SilentlyContinue
+Remove-Item Env:\GIT_SSH -ErrorAction SilentlyContinue
+Remove-Item Env:\SVN_SSH -ErrorAction SilentlyContinue
+Set-Alias vi "vim$(home\Get-BinSuffix)" -Force -Scope Global -Option AllScope
+
+#Set-Alias cd home\Set-LocationExHome -Force -Scope Global -Option AllScope
+Set-Alias env home\Get-ChildItemEnv -Force -Scope Global -Option AllScope
+Set-Alias which home\Get-CommandPath -Force -Scope Global -Option AllScope
+Set-Alias touch home\New-SimpleItem -Force -Scope Global -Option AllScope
 
 #if (home\Test-Windows)
 #{
@@ -113,8 +118,6 @@ Set-Alias touch home\New-SimpleItem -Force -Scope Global -Option AllScope -Descr
 
 # ### common ###
 
-#$private:binSuffix = ""
-#if (home\Test-Windows) { $private:binSuffix = ".exe"; }
 #Set-Alias -name vi -value "nvim${binSuffix}"
 #Set-Alias -name vim -value "nvim${binSuffix}"
 #Set-Alias -Name grep -Value Select-String

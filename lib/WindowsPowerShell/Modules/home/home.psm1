@@ -22,6 +22,10 @@ if ($IsWindows) { $script:pathsep = ";"; }
 # OS 依存のディレクトリ区切り文字。
 $script:dirsep = [IO.Path]::DirectorySeparatorChar
 
+# 実行ファイル拡張子の OS 依存サフィックス。
+$script:binSuffix = ""
+if ($IsWindows) { $script:binSuffix = ".exe"; }
+
 # Windows 判定を返す。
 function Test-Windows {
     # 初期化済みの判定結果を返す。
@@ -38,6 +42,11 @@ function Get-DirSep {
     return $dirsep
 }
 
+# 実行ファイルの拡張子サフィックスを返す。
+function Get-BinSuffix {
+    return $binSuffix
+}
+
 # -- Env or Env:PATH --
 
 # ユーザースコープの環境変数があれば削除する。
@@ -52,18 +61,20 @@ Function Set-NullEnv {
 }
 
 # 8.3 形式取得のため COM を使用する。
+# FileSystemObject のインスタンスをキャッシュする。
 $script:fso = $null
 
 # パス文字列を短縮パスに変換する。
 function Get-ShortPath
 {
     param([string]$name)
-    begin { $private:dirsep = Get-DirSep }
     process
     {
+        # COM オブジェクトは初回のみ生成して使い回す。
         if ($script:fso -eq $null) {
             $script:fso = New-Object -ComObject Scripting.FileSystemObject
         }
+        # 逐次的に短縮パスを組み立てるための作業変数。
         $private:result = $null
         # 区切りごとに存在確認しながら短縮化する。
         foreach ($path in $name.Split($dirsep))
@@ -76,6 +87,7 @@ function Get-ShortPath
 
             $private:joined = Join-Path $result $path
             try {
+                # 存在しないパスはそのまま連結だけ行う。
                 $private:fsi = Get-Item $joined -ErrorAction Stop
             }
             catch
@@ -84,7 +96,13 @@ function Get-ShortPath
                 continue
             }
 
-            if ($fsi.psiscontainer)
+            # ファイル/ディレクトリに応じて短縮パスを取得する。
+            if ($fsi.FullName -match "NeoVim")
+            {
+                # NeoVim は 8.3形式のパスに対応していない
+                $private:result = $fsi.FullName
+            }
+            elseif ($fsi.psiscontainer)
             {
                 $private:result = $fso.GetFolder($fsi.FullName).ShortPath
             }
@@ -119,7 +137,6 @@ function Resolve-HomePath
 function Join-EnvPath
 {
     param ([string]$first, [string]$second)
-    begin { $private:pathsep = Get-PathSep }
     process
     {
         # どちらかが空の場合は片方だけを採用する。
@@ -130,6 +147,7 @@ function Join-EnvPath
         } elseif ($second -ne "") {
             $private:result = $second
         }
+        # 結合後に重複を除去して返す。
         return (Remove-EnvPathDuplicates $result)
     }
 }
@@ -138,9 +156,9 @@ function Join-EnvPath
 function Push-EnvPath
 {
     param([Array]$Paths)
-    begin { $private:pathsep = Get-PathSep }
     process
     {
+        # 先頭追加分 + 既存分の順序を維持する入れ物。
         $private:dstPath = [System.Collections.ArrayList]::new()
         # 追加分を先頭に解決・短縮して並べる。
         $paths -split $pathsep | `
@@ -151,6 +169,7 @@ function Push-EnvPath
         $Env:PATH -split $pathsep | ` 
             % { Resolve-HomePath $_ } | `
             % { [void]$dstPath.Add($(Get-ShortPath $_)) }
+        # 重複除去後の PATH を反映する。
         $Env:Path = Remove-EnvPathDuplicates ($dstPath.ToArray() -join $pathsep)
     }
 }
@@ -159,16 +178,18 @@ function Push-EnvPath
 function Remove-EnvPathDuplicates
 {
     param([string]$value = $Env:PATH)
-    begin { $private:pathsep = Get-PathSep }
     process
     {
+        # PATH の出力順を保ったまま重複を排除する。
         $private:dstPath = [System.Collections.ArrayList]::new()
+        # 長短パスの両方で重複管理するための集合。
         $private:seen = @{}
         # 長短パスの両方で重複チェックする。
         foreach ($raw in ($value -split $pathsep))
         {
             $settled = Resolve-HomePath $raw
             if ([System.String]::IsNullOrEmpty($settled)) { continue }
+            # 短縮パスも算出して大小文字を無視した比較を行う。
             $short = Get-ShortPath $settled
             $keyLong = $settled.ToLowerInvariant()
             $keyShort = $short.ToLowerInvariant()
@@ -177,6 +198,7 @@ function Remove-EnvPathDuplicates
             $seen[$keyShort] = $true
             [void]$dstPath.Add($raw.Trim())
         }
+        # 項目順は維持して結合する。
         return $dstPath.ToArray() -join $pathsep
     }
 }
@@ -194,12 +216,15 @@ Function Test-ExistsParentPath(){
     {
         # ルートまで遡って対象ディレクトリを探す。
         $_path = $(Convert-Path -Path $path)
+        # 判定の打ち切りに使うルートパス。
         $_root = $(Join-Path (Split-Path -Path $_path -Qualifier) '\')
         if(Test-Path (Join-Path $_path $dir_name)){
             return $TRUE;
         }elseif($_root -eq $_path){
+            # ルートまで到達して未検出なら false。
             return $FALSE;
         }else{
+            # 親ディレクトリへ遡って再帰的に判定する。
             $_parent = Split-Path -Path $_path -Parent
             Test-ExistsParentPath $_parent $dir_name
         }
@@ -242,6 +267,7 @@ Function Get-Pwd(){
     # 現在パスを取得して HOME を ~ に置換する。
     $path = $(Get-Location).Path
     if($path.IndexOf($ENV:HOME) -eq 0){
+        # HOME 配下のときだけ ~ へ短縮する。
         $path = Join-Path '~' ($PWD.ProviderPath.Remove(0, ($ENV:HOME).Length))
     }
     return $path
@@ -268,6 +294,7 @@ Function Set-LocationExHome() {
         if([string]::IsNullOrEmpty("$Path")){
             Set-Location -Path $HOME
         }else{
+            # 指定パスがあればそのまま移動する。
             Set-Location -Path $Path
         }
     }
@@ -285,8 +312,10 @@ function Get-CommandPath() {
     # Get-Command の結果から実体またはエイリアス先を返す。
     $private:cmd = $(Get-Command $name)
     if ($cmd.CommandType -eq 'Alias') {
+        # エイリアスなら定義先を表示する。
         return "(Alias) $($cmd.Definition)"
     } else {
+        # コマンド実体のパスを返す。
         return "$($cmd.Definition)"
     }
 }
@@ -300,6 +329,7 @@ Function New-SimpleItem(){
         if(Test-Path $filename){
             Set-FileTime -Path $filename
         }else{
+            # 空ファイルとして作成する。
             New-Item $filename -itemType File
         }
     }
