@@ -20,6 +20,8 @@ $private:miscPath = $(Join-Path (Join-Path $HOME ".local") "misc")
 #Import-VisualStudioVars -VisualStudioVersion 2015 -Architecture amd64
 
 [ScriptBlock]$Prompt = {
+	Initialize-PSReadLineOnce
+
     $global:LASTEXITCODE = $LASTEXITCODE
 
     $local:prefix = $(Get-GitBranch)

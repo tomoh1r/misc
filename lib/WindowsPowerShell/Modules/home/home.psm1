@@ -51,17 +51,19 @@ Function Set-NullEnv {
     }
 }
 
+# 8.3 形式取得のため COM を使用する。
+$script:fso = $null
+
 # パス文字列を短縮パスに変換する。
 function Get-ShortPath
 {
     param([string]$name)
-    begin {
-        # 8.3 形式取得のため COM を使用する。
-        $private:fso = New-Object -ComObject Scripting.FileSystemObject
-        $private:dirsep = Get-DirSep
-    }
+    begin { $private:dirsep = Get-DirSep }
     process
     {
+        if ($script:fso -eq $null) {
+            $script:fso = New-Object -ComObject Scripting.FileSystemObject
+        }
         $private:result = $null
         # 区切りごとに存在確認しながら短縮化する。
         foreach ($path in $name.Split($dirsep))

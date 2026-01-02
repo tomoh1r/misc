@@ -29,6 +29,24 @@ $OutputEncoding = [Text.Encoding]::Default
 $Env:LANG = "ja_JP.UTF-8"
 #if (home\Test-Windows) { $Env:LANG = "ja_JP.CP932"; }
 
+# PSReadLine 設定を初回入力まで遅延
+function script:Initialize-PSReadLineOnce {
+    if ($script:PSReadLineInitialized) { return }
+    $script:PSReadLineInitialized = $true
+
+    #Import-ModuleEx -Name posh-git
+    #Import-ModuleEx -Name PSReadLine
+
+    if (-not (Get-Module -Name PSReadLine -ErrorAction Ignore)) {
+        Import-Module PSReadLine -ErrorAction SilentlyContinue | Out-Null
+    }
+
+    if (Get-Module -Name PSReadLine -ErrorAction Ignore) {
+        Set-PSReadLineOption -EditMode Emacs
+        Set-PSReadLineOption -BellStyle None
+    }
+}
+
 # ### init env ###
 
 & {
@@ -78,11 +96,6 @@ $Env:LANG = "ja_JP.UTF-8"
     $fp.Close()
     si -Path "Env:PATH" -Value (gi -Path Env:PATH).Value.Trim(";")
 }
-
-#Import-ModuleEx -Name posh-git
-#Import-ModuleEx -Name PSReadLine
-Set-PSReadlineOption -EditMode Emacs
-Set-PSReadlineOption -BellStyle None
 
 Remove-Item Alias:touch -ErrorAction SilentlyContinue
 Remove-Item Alias:vi -ErrorAction SilentlyContinue
