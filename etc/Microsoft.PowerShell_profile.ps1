@@ -60,39 +60,72 @@ function Get-ShortPath
 function Settle-Path
 {
     param ([string]$path)
-    # 末尾 ; とかで空白文字列が渡ってきた場合返す
-    if([System.String]::IsNullOrEmpty($path.Trim())) {
-      return $path
-    }
+    process
+    {
+        # 末尾 ; とかで空白文字列が渡ってきた場合返す
+        if([System.String]::IsNullOrEmpty($path.Trim())) {
+          return $path
+        }
 
-    $splitted = ($path.Trim()) -replace '^~', $HOME
-    return Split-Path -Path (Join-Path -Path $splitted -Child dmy) -Parent
+        $splitted = ($path.Trim()) -replace '^~', $HOME
+        return Split-Path -Path (Join-Path -Path $splitted -Child dmy) -Parent
+    }
 }
 
 function Join-EnvPath
 {
     param ([string]$first, [string]$second)
-    if ($first -ne "" -and $second -ne "") {
-        return "$($first)${pathsep}$($second)"
-    } elseif ($first -ne "") {
-        return $($first)
-    } elseif ($second -ne "") {
-        return $($second)
+    process
+    {
+        if ($first -ne "" -and $second -ne "") {
+            $private:result = "$($first)${pathsep}$($second)"
+        } elseif ($first -ne "") {
+            $private:result = $first
+        } elseif ($second -ne "") {
+            $private:result = $second
+        }
+        return (Trim-EnvPathDups $result)
     }
 }
 
 function Push-EnvPath
 {
     param([Array]$Paths)
-    $private:dstPath = [System.Collections.ArrayList]::new()
-    $paths -split $pathsep | `
-        % { Settle-Path $_ } | `
-        ? { -not $Env:PATH.Contains($settled) } | `
-        % { [void]$dstPath.Add($(Get-ShortPath $_)) }
-    $Env:PATH -split $pathsep | ` 
-        % { Settle-Path $_ } | `
-        % { [void]$dstPath.Add($(Get-ShortPath $_)) }
-    $Env:Path = $dstPath.ToArray() -join $pathsep
+    process
+    {
+        $private:dstPath = [System.Collections.ArrayList]::new()
+        $paths -split $pathsep | `
+            % { Settle-Path $_ } | `
+            ? { -not $Env:PATH.Contains($settled) } | `
+            % { [void]$dstPath.Add($(Get-ShortPath $_)) }
+        $Env:PATH -split $pathsep | ` 
+            % { Settle-Path $_ } | `
+            % { [void]$dstPath.Add($(Get-ShortPath $_)) }
+        $Env:Path = Trim-EnvPathDups ($dstPath.ToArray() -join $pathsep)
+    }
+}
+
+function Trim-EnvPathDups
+{
+    param([string]$value = $Env:PATH)
+    process
+    {
+        $private:dstPath = [System.Collections.ArrayList]::new()
+        $private:seen = @{}
+        foreach ($raw in ($value -split $pathsep))
+        {
+            $settled = Settle-Path $raw
+            if ([System.String]::IsNullOrEmpty($settled)) { continue }
+            $short = Get-ShortPath $settled
+            $keyLong = $settled.ToLowerInvariant()
+            $keyShort = $short.ToLowerInvariant()
+            if ($seen.ContainsKey($keyLong) -or $seen.ContainsKey($keyShort)) { continue }
+            $seen[$keyLong] = $true
+            $seen[$keyShort] = $true
+            [void]$dstPath.Add($raw.Trim())
+        }
+        return $dstPath.ToArray() -join $pathsep
+    }
 }
 
 Remove-Item -ErrorAction SilentlyContinue Alias:vi
