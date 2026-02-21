@@ -20,18 +20,8 @@ $private:miscPath = $(Join-Path (Join-Path $HOME ".local") "misc")
 #Import-VisualStudioVars -VisualStudioVersion 2015 -Architecture amd64
 
 #ri -ErrorAction SilentlyContinue Alias:ls
-#$script:shimsRoot = Join-Path (Join-Path $Env:LOCALAPPDATA "mise") "shims"
-#Set-Alias bat (Join-Path $shimsRoot "bat.cmd") -Force -Scope Global -Option AllScope
-#Set-Alias eza (Join-Path $shimsRoot "eza.cmd") -Force -Scope Global -Option AllScope
-#Set-Alias ls (Join-Path $shimsRoot "eza.cmd") -Force -Scope Global -Option AllScope
-#Set-Alias fd (Join-Path $shimsRoot "fd.cmd") -Force -Scope Global -Option AllScope
-#Set-Alias rg (Join-Path $shimsRoot "rg.cmd") -Force -Scope Global -Option AllScope
-#Set-Alias zoxide (Join-Path $shimsRoot "zoxide.cmd") -Force -Scope Global -Option AllScope
-#Set-Alias fzf (Join-Path $shimsRoot "fzf.cmd") -Force -Scope Global -Option AllScope
+#function ls { process { eza $Args; } }
 #function ll { process { eza -l $Args; } }
-#if (Test-Path (Join-Path $shimsRoot "zoxide.cmd")) {
-#    iex (&{(zoxide init powershell|Out-String)});
-#}
 
 [ScriptBlock]$Prompt = {
     Initialize-PSReadLineOnce
@@ -44,6 +34,10 @@ $private:miscPath = $(Join-Path (Join-Path $HOME ".local") "misc")
         $private:prefix = "(${prefix}) "
     }
     Write-Host "${prefix}[$(Get-Date -Format 'yyyy/mm/dd hh:mm:ss')] PS $(Get-Pwd)"
+
+    if ((Get-Alias -ErrorAction SilentlyContinue z) -eq $null) {
+        iex (&{(zoxide init powershell|Out-String)});
+    }
 
     $global:LASTEXITCODE = $realLASTEXITCODE
     return "PS> "
