@@ -35,7 +35,9 @@ $private:miscPath = $(Join-Path (Join-Path $HOME ".local") "misc")
     }
     Write-Host "${prefix}[$(Get-Date -Format 'yyyy/mm/dd hh:mm:ss')] PS $(Get-Pwd)"
 
-    if ((Get-Alias -ErrorAction SilentlyContinue z) -eq $null) {
+    $private:isExistsZoxide = Get-Command -ErrorAction SilentlyContinue zoxide
+    $private:isExistsZ = Get-Alias -ErrorAction SilentlyContinue z
+    if ($isExistsZoxide -and ($isExistsZ -eq $null)) {
         iex (&{(zoxide init powershell|Out-String)});
     }
 
