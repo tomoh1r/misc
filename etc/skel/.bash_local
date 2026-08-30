@@ -25,7 +25,6 @@ export PATH="$PATH:$_OLDPATH"
 . ~/.bash_aliases
 
 ### 作業ブランチの表示
-#. ~/misc/share/git/git-completion.bash
 #. ~/misc/share/git/git-prompt.sh
 #PS1="\$(git_branch)\$(hg_branch)[@\h \W]\$ "
 PS1="[@\h \W]\r\n\$ "
