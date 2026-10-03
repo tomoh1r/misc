@@ -1,9 +1,3 @@
-# ### cmder noprofile ###
-if ([Environment]::GetEnvironmentVariable('ConEmuTask') -ne $null -And `
-        $Env:ConEmuTask.ToLower().Contains('noprofile')) {
-    return
-}
-
 # ### module ###
 $private:pathsep = ":"
 if (($PSVersionTable.Platform -eq "Win32NT") -or ($Env:OS -eq "Windows_NT"))
@@ -50,6 +44,19 @@ function script:Initialize-PSReadLineOnce {
 # ### init env ###
 
 & {
+    # Setup UTF-8
+    if ([Console]::OutputEncoding.CodePage -ne 65001) {
+        $utf8 = [System.Text.UTF8Encoding]::new()
+        $OutputEncoding = $utf8
+        [Console]::InputEncoding  = $utf8
+        [Console]::OutputEncoding = $utf8
+    }
+    if ($PSVersionTable.PSVersion.Major -le 5) {
+        if (-not (chcp).Contains('65001')) {
+            chcp 65001
+        }
+    }
+
     if ($Env:PATH -eq $null -and $Env:Path -ne $null)
     {
         $Env:PATH = home\Resolve-HomePath $Env:Path
